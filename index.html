@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LAWN OPS — Mission Control</title>
+
+<!-- iOS Web App -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LAWN OPS">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+
+<!-- Android / PWA -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#080d08">
+<link rel="icon" type="image/png" href="icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -422,38 +436,38 @@ body::before{content:'';position:fixed;inset:0;background:var(--scan);pointer-ev
     <button class="wtab" onclick="sw(6,this)">OCT–JAN</button>
   </div>
 
-  <!-- THIS WEEK - Apr 7-13 -->
+  <!-- THIS WEEK - dynamically dated -->
   <div class="wpanel show" id="wp1">
-    <div class="wbar"><span class="wcn">THIS WEEK</span><span class="wmis">// Weed &amp; Feed is doing its thing. Stay out of the way.</span><span class="wrange">Apr 7–13</span></div>
+    <div class="wbar"><span class="wcn">THIS WEEK</span><span class="wmis">// Weed &amp; Feed is doing its thing. Stay out of the way.</span><span class="wrange" id="wr1"></span></div>
     <div class="dgrid">
-      <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span><span class="dnum">7</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">Weed &amp; Feed is working. Don't disturb it.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Tue</span><span class="dnum">8</span></div><div class="task"><div class="td water"></div><div class="tt">Water</div><div class="tn">Deep session 1. Morning only. 30–40 min.</div></div></div>
-      <div class="dc today"><div class="dhdr"><span class="dname">Wed</span><span class="dnum">9</span><span class="nowpip">NOW</span></div><div class="task"><div class="td inspect"></div><div class="tt">Weed Patrol</div><div class="tn">10 min walk. Note what's dying. Note what isn't.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Thu</span><span class="dnum">10</span></div><div class="task"><div class="td rest"></div><div class="tn">Rain in forecast (75%). Let nature water it.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Fri</span><span class="dnum">11</span></div><div class="task"><div class="td rest"></div><div class="tn">Rain likely (75%). Day off.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Sat</span><span class="dnum">12</span></div>
+      <div class="dc rest" id="wc1-0"><div class="dhdr" id="wh1-0"><span class="dname" id="wn1-0"></span><span class="dnum" id="wd1-0"></span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">Weed &amp; Feed is working. Don't disturb it.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname" id="wn1-1"></span><span class="dnum" id="wd1-1"></span></div><div class="task"><div class="td water"></div><div class="tt">Water</div><div class="tn">Deep session 1. Morning only. 30–40 min.</div></div></div>
+      <div class="dc" id="wc1-2"><div class="dhdr" id="wh1-2"><span class="dname" id="wn1-2"></span><span class="dnum" id="wd1-2"></span></div><div class="task"><div class="td inspect"></div><div class="tt">Weed Patrol</div><div class="tn">10 min walk. Note what's dying. Note what isn't.</div></div></div>
+      <div class="dc" id="wc1-3"><div class="dhdr" id="wh1-3"><span class="dname" id="wn1-3"></span><span class="dnum" id="wd1-3"></span></div><div class="task"><div class="td rest"></div><div class="tn">Rain in forecast (75%). Let nature water it.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname" id="wn1-4"></span><span class="dnum" id="wd1-4"></span></div><div class="task"><div class="td rest"></div><div class="tn">Rain likely (75%). Day off.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname" id="wn1-5"></span><span class="dnum" id="wd1-5"></span></div>
         <div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Early! 2.5–3 in deck. Check forecast — 75% rain.</div></div>
         <div class="task"><div class="td beds"></div><div class="tt">Edge</div><div class="tn">Sidewalks &amp; driveway while you're out there.</div></div>
       </div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span><span class="dnum">13</span></div><div class="task"><div class="td rest"></div><div class="tt">Rest</div><div class="tn">Lawn's doing its thing. So can you.</div></div></div>
+      <div class="dc rest" id="wc1-6"><div class="dhdr"><span class="dname" id="wn1-6"></span><span class="dnum" id="wd1-6"></span></div><div class="task"><div class="td rest"></div><div class="tt">Rest</div><div class="tn">Lawn's doing its thing. So can you.</div></div></div>
     </div>
-    <div class="wfoot">⚠️ Rain forecast Fri–Sat (75%). Check the weather section above before mowing Saturday — wet grass clumps and spreads fungal spores. If it's soaked, push to Sunday morning.</div>
+    <div class="wfoot">⚠️ Rain forecast this weekend. Check the weather section above before mowing Saturday — wet grass clumps and spreads fungal spores. If it's soaked, push to Sunday morning.</div>
   </div>
 
-  <!-- NEXT WEEK - Apr 14-20 -->
+  <!-- NEXT WEEK - dynamically dated -->
   <div class="wpanel" id="wp2">
-    <div class="wbar"><span class="wcn">NEXT WEEK</span><span class="wmis">// Routine settles in. Mow, water, inspect.</span><span class="wrange">Apr 14–20</span></div>
+    <div class="wbar"><span class="wcn">NEXT WEEK</span><span class="wmis">// Routine settles in. Mow, water, inspect.</span><span class="wrange" id="wr2"></span></div>
     <div class="dgrid">
-      <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span><span class="dnum">14</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Tue</span><span class="dnum">15</span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 1. Early morning. Deep and slow.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Wed</span><span class="dnum">16</span></div><div class="task"><div class="td inspect"></div><div class="tt">Weed Patrol</div><div class="tn">Pull any survivors by hand. 10 min max.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Thu</span><span class="dnum">17</span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 2. 1 inch total for the week.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Fri</span><span class="dnum">18</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">It's Friday. The lawn is fine.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Sat</span><span class="dnum">19</span></div>
+      <div class="dc rest" id="wc2-0"><div class="dhdr"><span class="dname" id="wn2-0"></span><span class="dnum" id="wd2-0"></span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname" id="wn2-1"></span><span class="dnum" id="wd2-1"></span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 1. Early morning. Deep and slow.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname" id="wn2-2"></span><span class="dnum" id="wd2-2"></span></div><div class="task"><div class="td inspect"></div><div class="tt">Weed Patrol</div><div class="tn">Pull any survivors by hand. 10 min max.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname" id="wn2-3"></span><span class="dnum" id="wd2-3"></span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 2. 1 inch total for the week.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname" id="wn2-4"></span><span class="dnum" id="wd2-4"></span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">It's Friday. The lawn is fine.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname" id="wn2-5"></span><span class="dnum" id="wd2-5"></span></div>
         <div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Before 10am. 2.5–3 in. Bag or mulch now — weeds dying.</div></div>
         <div class="task"><div class="td beds"></div><div class="tt">Edge &amp; Tidy</div><div class="tn">Fence lines, driveway. Details make it look pro.</div></div>
       </div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span><span class="dnum">20</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname" id="wn2-6"></span><span class="dnum" id="wd2-6"></span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
     </div>
     <div class="wfoot">🎯 Routine locked: Mow Sat morning, water Tue &amp; Thu, weed patrol Wed. ~90 min total per week. This is the whole maintenance schedule.</div>
   </div>
@@ -926,9 +940,96 @@ function pchk(el){
   }catch(e){}
 })();
 
-// ── CLOCK ──
-function tick(){const n=new Date();document.getElementById('clk').textContent=[n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');}
+// ── CLOCK + LIVE DATE/DAY INIT ──
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function tick(){
+  const n=new Date();
+  document.getElementById('clk').textContent=
+    DAYS[n.getDay()]+' '+MONTHS[n.getMonth()]+' '+n.getDate()+' · '+
+    [n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');
+}
 tick();setInterval(tick,1000);
+
+function initWeekDates(){
+  const now=new Date();
+  const todayDow=now.getDay(); // 0=Sun
+  // find Monday of current week (Mon=start)
+  const diffToMon=todayDow===0?-6:1-todayDow;
+  const monday=new Date(now);
+  monday.setDate(now.getDate()+diffToMon);
+
+  // fill THIS WEEK (Mon–Sun of current week)
+  for(let i=0;i<7;i++){
+    const d=new Date(monday);
+    d.setDate(monday.getDate()+i);
+    const isToday=d.toDateString()===now.toDateString();
+    const col=document.getElementById('wc1-'+i);
+    const hdr=document.getElementById('wh1-'+i);
+    const dn=document.getElementById('wn1-'+i);
+    const dd=document.getElementById('wd1-'+i);
+    if(dn) dn.textContent=DAYS[d.getDay()];
+    if(dd) dd.textContent=d.getDate();
+    if(col && isToday){
+      col.classList.add('today');
+      // inject NOW pip
+      if(hdr && !hdr.querySelector('.nowpip')){
+        const pip=document.createElement('span');
+        pip.className='nowpip';pip.textContent='NOW';
+        hdr.appendChild(pip);
+      }
+    }
+  }
+  // range label
+  const monEnd=new Date(monday);monEnd.setDate(monday.getDate()+6);
+  const r1=document.getElementById('wr1');
+  if(r1) r1.textContent=MONTHS[monday.getMonth()]+' '+monday.getDate()+'–'+monEnd.getDate();
+
+  // fill NEXT WEEK
+  const nextMon=new Date(monday);nextMon.setDate(monday.getDate()+7);
+  for(let i=0;i<7;i++){
+    const d=new Date(nextMon);
+    d.setDate(nextMon.getDate()+i);
+    const dn=document.getElementById('wn2-'+i);
+    const dd=document.getElementById('wd2-'+i);
+    if(dn) dn.textContent=DAYS[d.getDay()];
+    if(dd) dd.textContent=d.getDate();
+  }
+  const nextEnd=new Date(nextMon);nextEnd.setDate(nextMon.getDate()+6);
+  const r2=document.getElementById('wr2');
+  if(r2) r2.textContent=MONTHS[nextMon.getMonth()]+' '+nextMon.getDate()+'–'+nextEnd.getDate();
+
+  // update SEC-03 description
+  const sec3desc=document.querySelector('#week .sdesc');
+  if(sec3desc) sec3desc.textContent='// Saturday = mow day · Water twice a week · Wednesday weed patrol · Week of '+MONTHS[monday.getMonth()]+' '+monday.getDate();
+
+  // ── TRASH BIN REMINDER ──
+  // Inject into Monday col of whichever week is visible, and Sunday as heads-up
+  // Pickup is Tuesday — bins go out Monday evening
+  function addTrashTask(colId){
+    const col=document.getElementById(colId);
+    if(!col) return;
+    const t=document.createElement('div');
+    t.className='task';
+    t.innerHTML='<div class="td" style="background:#aaaaaa;box-shadow:none"></div><div class="tt">🗑️ Bins Out</div><div class="tn">Put trash &amp; recycling out tonight. Pickup: Tuesday morning.</div>';
+    col.appendChild(t);
+  }
+  function addTrashReminder(colId){
+    const col=document.getElementById(colId);
+    if(!col) return;
+    const t=document.createElement('div');
+    t.className='task';
+    t.innerHTML='<div class="td" style="background:#555;box-shadow:none"></div><div class="tt">🗑️ Bins tomorrow</div><div class="tn">Reminder: put bins out tomorrow evening (Monday).</div>';
+    col.appendChild(t);
+  }
+  // Week 1 Monday (index 0) and Sunday (index 6 = reminder for next Monday)
+  addTrashTask('wc1-0');
+  addTrashReminder('wc1-6');
+  // Week 2 Monday
+  addTrashTask('wc2-0');
+}
+initWeekDates();
 
 // ── WEEK TABS ──
 function sw(n,btn){
