@@ -56,14 +56,38 @@ body::before{content:'';position:fixed;inset:0;background:var(--scan);pointer-ev
 
 /* ── HEADER ── */
 .hdr{background:var(--panel);border-bottom:1px solid var(--border2);position:sticky;top:0;z-index:100;display:flex;align-items:stretch;padding:0 20px;}
-.logo{font-family:var(--disp);font-weight:900;font-size:13px;letter-spacing:.16em;color:var(--green);text-shadow:var(--gglow-sm);text-transform:uppercase;display:flex;align-items:center;gap:7px;padding:12px 16px 12px 0;border-right:1px solid var(--border2);margin-right:4px;white-space:nowrap;}
+.logo{font-family:var(--disp);font-weight:900;font-size:13px;letter-spacing:.16em;color:var(--green);text-shadow:var(--gglow-sm);text-transform:uppercase;display:flex;align-items:center;gap:7px;padding:12px 16px 12px 0;border-right:1px solid var(--border2);margin-right:4px;white-space:nowrap;flex-shrink:0;}
 .logo::before{content:'◉';font-size:8px;animation:pulse 2s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* desktop nav */
 .nav{display:flex;overflow-x:auto;scrollbar-width:none;flex:1;}
 .nav::-webkit-scrollbar{display:none;}
 .nav a{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);text-decoration:none;padding:0 13px;display:flex;align-items:center;border-right:1px solid var(--border);transition:all .15s;white-space:nowrap;}
 .nav a:hover{color:var(--green);background:var(--gdim);}
-#clk{font-family:var(--mono);font-size:10px;color:var(--text3);display:flex;align-items:center;padding-left:13px;white-space:nowrap;}
+#clk{font-family:var(--mono);font-size:10px;color:var(--text3);display:flex;align-items:center;padding-left:13px;white-space:nowrap;flex-shrink:0;}
+
+/* hamburger button — hidden on desktop */
+.nav-burger{display:none;background:none;border:none;cursor:pointer;padding:0 14px;flex-direction:column;gap:5px;align-items:center;justify-content:center;height:100%;}
+.nav-burger span{display:block;width:20px;height:2px;background:var(--text2);border-radius:1px;transition:all .2s;}
+.nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-burger.open span:nth-child(2){opacity:0;}
+.nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* mobile dropdown */
+.nav-dropdown{display:none;position:fixed;top:45px;left:0;right:0;background:var(--panel);border-bottom:2px solid var(--green);z-index:99;flex-direction:column;box-shadow:0 8px 24px rgba(0,0,0,0.5);}
+.nav-dropdown.open{display:flex;}
+.nav-dropdown a{font-family:var(--mono);font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--text2);text-decoration:none;padding:14px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;transition:all .15s;}
+.nav-dropdown a:last-child{border-bottom:none;}
+.nav-dropdown a:active{background:var(--gdim);color:var(--green);}
+.nav-dropdown a::before{content:'▸';color:var(--green3);font-size:10px;}
+
+@media(max-width:640px){
+  .nav{display:none;}
+  .nav-burger{display:flex;}
+  #clk{font-size:9px;padding-left:8px;}
+  .logo{font-size:11px;padding-right:10px;}
+}
 
 /* ── WRAP ── */
 .wrap{max-width:980px;margin:0 auto;padding:0 20px;}
@@ -368,8 +392,23 @@ body::before{content:'';position:fixed;inset:0;background:var(--scan);pointer-ev
     <a href="#armory">ARMORY</a>
     <a href="#projects">PROJECTS</a>
   </nav>
+  <button class="nav-burger" id="burger" onclick="toggleBurger()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
   <div id="clk">--:--:--</div>
 </header>
+
+<!-- MOBILE NAV DROPDOWN -->
+<div class="nav-dropdown" id="navDrop">
+  <a href="#weather" onclick="closeBurger()">WEATHER</a>
+  <a href="#status" onclick="closeBurger()">STATUS</a>
+  <a href="#week" onclick="closeBurger()">WEEK</a>
+  <a href="#timeline" onclick="closeBurger()">CALENDAR</a>
+  <a href="#checklist" onclick="closeBurger()">CHECKLIST</a>
+  <a href="#intel" onclick="closeBurger()">WEED INTEL</a>
+  <a href="#armory" onclick="closeBurger()">ARMORY</a>
+  <a href="#projects" onclick="closeBurger()">PROJECTS</a>
+</div>
 
 <div class="wrap">
 
@@ -404,11 +443,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--scan);pointer-ev
 <section class="sec" id="status">
   <div class="sh"><span class="sid">SEC-02</span><div><div class="stitle">MISSION <span class="g">STATUS</span></div><div class="sdesc">// What you've done · What's next · Current lawn phase</div></div></div>
 
-  <div id="overseedException" class="lawn-alert blue" style="margin-bottom:16px">
-    <span>🌱</span>
-    <span><strong>OVERSEEDING:</strong> Spring window is closed for you. You applied Weed &amp; Feed which contains herbicide — seeding within 6–8 weeks will kill the new grass. That puts you into late May/early June when Sacramento starts hitting 90°F+. <strong>September is the right call.</strong> Fall conditions (60–75°F soil) are ideal for tall fescue germination and you'll get much better results.</span>
-  </div>
-
   <div class="status-grid">
     <div class="status-card done"><div class="sc-label">First Mow</div><div class="sc-val">✓ DONE</div><div class="sc-sub">High deck, ground zero</div></div>
     <div class="status-card done"><div class="sc-label">Scalp Mow</div><div class="sc-val">✓ DONE</div><div class="sc-sub">Cut down short</div></div>
@@ -436,40 +470,18 @@ body::before{content:'';position:fixed;inset:0;background:var(--scan);pointer-ev
     <button class="wtab" onclick="sw(6,this)">OCT–JAN</button>
   </div>
 
-  <!-- THIS WEEK - dynamically dated -->
+  <!-- THIS WEEK + NEXT WEEK — fully generated by JS based on current date -->
   <div class="wpanel show" id="wp1">
-    <div class="wbar"><span class="wcn">THIS WEEK</span><span class="wmis">// Weed &amp; Feed is doing its thing. Stay out of the way.</span><span class="wrange" id="wr1"></span></div>
-    <div class="dgrid">
-      <div class="dc rest" id="wc1-0"><div class="dhdr" id="wh1-0"><span class="dname" id="wn1-0"></span><span class="dnum" id="wd1-0"></span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">Weed &amp; Feed is working. Don't disturb it.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname" id="wn1-1"></span><span class="dnum" id="wd1-1"></span></div><div class="task"><div class="td water"></div><div class="tt">Water</div><div class="tn">Deep session 1. Morning only. 30–40 min.</div></div></div>
-      <div class="dc" id="wc1-2"><div class="dhdr" id="wh1-2"><span class="dname" id="wn1-2"></span><span class="dnum" id="wd1-2"></span></div><div class="task"><div class="td inspect"></div><div class="tt">Weed Patrol</div><div class="tn">10 min walk. Note what's dying. Note what isn't.</div></div></div>
-      <div class="dc" id="wc1-3"><div class="dhdr" id="wh1-3"><span class="dname" id="wn1-3"></span><span class="dnum" id="wd1-3"></span></div><div class="task"><div class="td rest"></div><div class="tn">Rain in forecast (75%). Let nature water it.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname" id="wn1-4"></span><span class="dnum" id="wd1-4"></span></div><div class="task"><div class="td rest"></div><div class="tn">Rain likely (75%). Day off.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname" id="wn1-5"></span><span class="dnum" id="wd1-5"></span></div>
-        <div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Early! 2.5–3 in deck. Check forecast — 75% rain.</div></div>
-        <div class="task"><div class="td beds"></div><div class="tt">Edge</div><div class="tn">Sidewalks &amp; driveway while you're out there.</div></div>
-      </div>
-      <div class="dc rest" id="wc1-6"><div class="dhdr"><span class="dname" id="wn1-6"></span><span class="dnum" id="wd1-6"></span></div><div class="task"><div class="td rest"></div><div class="tt">Rest</div><div class="tn">Lawn's doing its thing. So can you.</div></div></div>
-    </div>
-    <div class="wfoot">⚠️ Rain forecast this weekend. Check the weather section above before mowing Saturday — wet grass clumps and spreads fungal spores. If it's soaked, push to Sunday morning.</div>
+    <div class="wbar"><span class="wcn">THIS WEEK</span><span class="wmis" id="wm1"></span><span class="wrange" id="wr1"></span></div>
+    <div class="dgrid" id="wg1"></div>
+    <div class="wfoot" id="wf1"></div>
   </div>
 
-  <!-- NEXT WEEK - dynamically dated -->
+  <!-- NEXT WEEK -->
   <div class="wpanel" id="wp2">
-    <div class="wbar"><span class="wcn">NEXT WEEK</span><span class="wmis">// Routine settles in. Mow, water, inspect.</span><span class="wrange" id="wr2"></span></div>
-    <div class="dgrid">
-      <div class="dc rest" id="wc2-0"><div class="dhdr"><span class="dname" id="wn2-0"></span><span class="dnum" id="wd2-0"></span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname" id="wn2-1"></span><span class="dnum" id="wd2-1"></span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 1. Early morning. Deep and slow.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname" id="wn2-2"></span><span class="dnum" id="wd2-2"></span></div><div class="task"><div class="td inspect"></div><div class="tt">Weed Patrol</div><div class="tn">Pull any survivors by hand. 10 min max.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname" id="wn2-3"></span><span class="dnum" id="wd2-3"></span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 2. 1 inch total for the week.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname" id="wn2-4"></span><span class="dnum" id="wd2-4"></span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">It's Friday. The lawn is fine.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname" id="wn2-5"></span><span class="dnum" id="wd2-5"></span></div>
-        <div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Before 10am. 2.5–3 in. Bag or mulch now — weeds dying.</div></div>
-        <div class="task"><div class="td beds"></div><div class="tt">Edge &amp; Tidy</div><div class="tn">Fence lines, driveway. Details make it look pro.</div></div>
-      </div>
-      <div class="dc rest"><div class="dhdr"><span class="dname" id="wn2-6"></span><span class="dnum" id="wd2-6"></span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-    </div>
-    <div class="wfoot">🎯 Routine locked: Mow Sat morning, water Tue &amp; Thu, weed patrol Wed. ~90 min total per week. This is the whole maintenance schedule.</div>
+    <div class="wbar"><span class="wcn">NEXT WEEK</span><span class="wmis" id="wm2"></span><span class="wrange" id="wr2"></span></div>
+    <div class="dgrid" id="wg2"></div>
+    <div class="wfoot" id="wf2"></div>
   </div>
 
   <!-- LATE APRIL -->
@@ -917,6 +929,22 @@ body::before{content:'';position:fixed;inset:0;background:var(--scan);pointer-ev
 </div><!-- /app -->
 
 <script>
+// ── HAMBURGER NAV ──
+function toggleBurger(){
+  const b=document.getElementById('burger');
+  const d=document.getElementById('navDrop');
+  b.classList.toggle('open');
+  d.classList.toggle('open');
+}
+function closeBurger(){
+  document.getElementById('burger').classList.remove('open');
+  document.getElementById('navDrop').classList.remove('open');
+}
+// close on outside tap
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.hdr')&&!e.target.closest('.nav-dropdown'))closeBurger();
+});
+
 // ── PROJECT TOGGLES ──
 function toggleProj(n){
   const det=document.getElementById('pd'+n);
@@ -954,80 +982,174 @@ tick();setInterval(tick,1000);
 
 function initWeekDates(){
   const now=new Date();
-  const todayDow=now.getDay(); // 0=Sun
-  // find Monday of current week (Mon=start)
+  const todayDow=now.getDay();
   const diffToMon=todayDow===0?-6:1-todayDow;
   const monday=new Date(now);
   monday.setDate(now.getDate()+diffToMon);
-
-  // fill THIS WEEK (Mon–Sun of current week)
-  for(let i=0;i<7;i++){
-    const d=new Date(monday);
-    d.setDate(monday.getDate()+i);
-    const isToday=d.toDateString()===now.toDateString();
-    const col=document.getElementById('wc1-'+i);
-    const hdr=document.getElementById('wh1-'+i);
-    const dn=document.getElementById('wn1-'+i);
-    const dd=document.getElementById('wd1-'+i);
-    if(dn) dn.textContent=DAYS[d.getDay()];
-    if(dd) dd.textContent=d.getDate();
-    if(col && isToday){
-      col.classList.add('today');
-      // inject NOW pip
-      if(hdr && !hdr.querySelector('.nowpip')){
-        const pip=document.createElement('span');
-        pip.className='nowpip';pip.textContent='NOW';
-        hdr.appendChild(pip);
-      }
-    }
-  }
-  // range label
-  const monEnd=new Date(monday);monEnd.setDate(monday.getDate()+6);
-  const r1=document.getElementById('wr1');
-  if(r1) r1.textContent=MONTHS[monday.getMonth()]+' '+monday.getDate()+'–'+monEnd.getDate();
-
-  // fill NEXT WEEK
   const nextMon=new Date(monday);nextMon.setDate(monday.getDate()+7);
-  for(let i=0;i<7;i++){
-    const d=new Date(nextMon);
-    d.setDate(nextMon.getDate()+i);
-    const dn=document.getElementById('wn2-'+i);
-    const dd=document.getElementById('wd2-'+i);
-    if(dn) dn.textContent=DAYS[d.getDay()];
-    if(dd) dd.textContent=d.getDate();
+
+  // ── SEASON DETECTOR ──
+  // Returns a schedule template based on the month
+  function getSeason(date){
+    const m=date.getMonth(); // 0=Jan
+    const d=date.getDate();
+    if(m===8) return 'fall';                          // September
+    if(m===9||m===10) return 'windup';                // Oct–Nov
+    if(m===11||m===0||m===1) return 'winter';         // Dec–Feb
+    if(m===2||(m===3&&d<21)) return 'spring_early';  // Mar–Apr 20
+    if((m===3&&d>=21)||(m===4)) return 'spring_late'; // Apr 21–May
+    if(m>=5&&m<=7) return 'summer';                   // Jun–Aug
+    return 'spring_early';
   }
-  const nextEnd=new Date(nextMon);nextEnd.setDate(nextMon.getDate()+6);
-  const r2=document.getElementById('wr2');
-  if(r2) r2.textContent=MONTHS[nextMon.getMonth()]+' '+nextMon.getDate()+'–'+nextEnd.getDate();
+
+  // ── TASK LIBRARY ──
+  // Each day slot: { cls, tasks: [{dot, title, note}] }
+  // dow: 0=Mon,1=Tue,2=Wed,3=Thu,4=Fri,5=Sat,6=Sun
+  function getSchedule(season){
+    const s={
+      spring_early:{
+        foot:'🌱 Spring window: mow every Saturday, water twice weekly, keep an eye on weeds as they emerge.',
+        mis:'// Mow Sat · Water Tue &amp; Thu · Weed patrol Wed',
+        days:[
+          {tasks:[{dot:'rest',t:'—',n:'Recover from the weekend.'}]},
+          {tasks:[{dot:'water',t:'Water Deep',n:'Morning only. ~40 min. 0.5 in target.'}]},
+          {tasks:[{dot:'inspect',t:'Weed Patrol',n:'10 min walk. Pull anything visible by hand.'}]},
+          {tasks:[{dot:'water',t:'Water Deep',n:'Session 2. Hit 1 in total for the week.'}]},
+          {tasks:[{dot:'rest',t:'—',n:"It's Friday. Lawn is fine."}]},
+          {tasks:[{dot:'mow',t:'Mow 🌅',n:'Before 10am. Deck 2.5–3 in. Every Saturday.'},{dot:'beds',t:'Edge',n:'Sidewalks and driveway while you\'re already out there.'}]},
+          {tasks:[{dot:'rest',t:'Rest',n:"Lawn's doing its thing. So can you."}]},
+        ]
+      },
+      spring_late:{
+        foot:'📊 Weed &amp; Feed results should be showing now. Spot spray any survivors. Start raising deck toward 3.5 in.',
+        mis:'// Mow Sat · Water Tue &amp; Thu · Assess weed results',
+        days:[
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'water',t:'Water',n:'Deep session. Morning only.'}]},
+          {tasks:[{dot:'inspect',t:'Assess Weeds',n:'What survived the W&amp;F? Spot spray stragglers.'}]},
+          {tasks:[{dot:'water',t:'Water',n:'Session 2.'}]},
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'mow',t:'Mow 🌅',n:'Raise deck to 3–3.5 in. Heat is coming.'},{dot:'inspect',t:'Spot Spray?',n:'Only if persistent weeds remain.'}]},
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+        ]
+      },
+      summer:{
+        foot:'☀️ Summer rules: mow high (3.5"), before 10am always, water 1.5 in/week in 3 sessions. No fescue fertilizer.',
+        mis:'// Mow Sat before 10am · Water 3×/week · Stay cool',
+        days:[
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'water',t:'Water Deep',n:'Session 1/3. 0.5 in. Morning only — always.'}]},
+          {tasks:[{dot:'rest',t:'—',n:"It's hot. Stay inside. Lawn is fine."}]},
+          {tasks:[{dot:'water',t:'Water Deep',n:'Session 2/3. Never afternoon — ever.'}]},
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'mow',t:'Mow 🌅',n:'Before 10am hard stop. Deck at 3.5 in. Taller = cooler soil.'},{dot:'inspect',t:'Pest Check',n:'Brown patches = chinch bugs or grubs. Catch early.'}]},
+          {tasks:[{dot:'water',t:'Water Deep',n:'Session 3/3. Hit 1.5 in total for the week.'}]},
+        ]
+      },
+      fall:{
+        foot:'🍂 September is the most important lawn month of the year. Plug aerate → overseed → fall fertilize. This week matters.',
+        mis:'// Plug aerate · Overseed · Fall fertilize',
+        days:[
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'aerate',t:'Plug Aerate',n:'Rent the PLUG aerator. Not spike — plug. Book in advance.'}]},
+          {tasks:[{dot:'seed',t:'Overseed',n:'Tall fescue over thin spots right after aerating.'}]},
+          {tasks:[{dot:'feed',t:'Fall Fertilize',n:'High N slow-release. Most important feed of the year.'}]},
+          {tasks:[{dot:'water',t:'Daily Water',n:'New seed needs moisture until 2 inches tall.'}]},
+          {tasks:[{dot:'mow',t:'Mow Short 🌅',n:'Drop to 2 in before aerating. Then back up after.'},{dot:'inspect',t:'Fall Pre-em',n:'Only if NOT overseeding this year.'}]},
+          {tasks:[{dot:'rest',t:'After Photo',n:'Compare to April. Post it. You earned every compliment.'}]},
+        ]
+      },
+      windup:{
+        foot:'🍂 Wind down mode. Mow when needed, spot treat winter weeds, apply winterizer in October.',
+        mis:'// Mow as needed · Winterizer Oct · Spot winter weeds',
+        days:[
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'rest',t:'—',n:'Watering reduces as rains arrive.'}]},
+          {tasks:[{dot:'inspect',t:'Winter Weeds',n:'Spot treat chickweed &amp; poa annua as they appear.'}]},
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'mow',t:'Mow (as needed)',n:'Every 2–3 weeks or when shaggy.'},{dot:'feed',t:'Winterizer',n:'October only: high K fertilizer. Then done for the year.'}]},
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+        ]
+      },
+      winter:{
+        foot:'❄️ Minimal maintenance. Spot treat winter weeds, sharpen blade, order spring supplies. Enjoy not mowing weekly.',
+        mis:'// Spot weeds · Sharpen blade · Plan spring',
+        days:[
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'inspect',t:'Spot Weeds',n:'Pull or spray any chickweed, poa annua, clover.'}]},
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+          {tasks:[{dot:'mow',t:'Mow (if needed)',n:'Only if actively growing. Skip if dormant.'}]},
+          {tasks:[{dot:'rest',t:'—',n:'—'}]},
+        ]
+      }
+    };
+    return s[season]||s.spring_early;
+  }
+
+  // ── RENDER A WEEK GRID ──
+  function renderWeek(gridId, rangeId, misId, footId, startMonday, isCurrent){
+    const grid=document.getElementById(gridId);
+    const rangeEl=document.getElementById(rangeId);
+    const misEl=document.getElementById(misId);
+    const footEl=document.getElementById(footId);
+    if(!grid) return;
+
+    const season=getSeason(startMonday);
+    const sched=getSchedule(season);
+    grid.innerHTML='';
+
+    const monEnd=new Date(startMonday);monEnd.setDate(startMonday.getDate()+6);
+    if(rangeEl) rangeEl.textContent=MONTHS[startMonday.getMonth()]+' '+startMonday.getDate()+'–'+monEnd.getDate();
+    if(misEl) misEl.innerHTML=sched.mis;
+    if(footEl) footEl.textContent='';
+
+    for(let i=0;i<7;i++){
+      const d=new Date(startMonday);d.setDate(startMonday.getDate()+i);
+      const isToday=isCurrent&&d.toDateString()===now.toDateString();
+      const isPast=isCurrent&&d<now&&!isToday;
+      const dayData=sched.days[i];
+
+      const col=document.createElement('div');
+      col.className='dc'+(isPast?' rest':'')+(isToday?' today':'');
+
+      // header
+      const hdr=document.createElement('div');
+      hdr.className='dhdr';
+      hdr.innerHTML=`<span class="dname">${DAYS[d.getDay()]}</span><span class="dnum">${d.getDate()}</span>`;
+      if(isToday){const pip=document.createElement('span');pip.className='nowpip';pip.textContent='NOW';hdr.appendChild(pip);}
+      col.appendChild(hdr);
+
+      // tasks
+      dayData.tasks.forEach(task=>{
+        const t=document.createElement('div');
+        t.className='task';
+        t.innerHTML=`<div class="td ${task.dot}"></div><div class="tt">${task.t}</div><div class="tn">${task.n}</div>`;
+        col.appendChild(t);
+      });
+
+      // trash on Monday
+      if(i===0){
+        const trash=document.createElement('div');
+        trash.className='task';
+        trash.innerHTML='<div class="td" style="background:#888;box-shadow:none"></div><div class="tt">🗑️ Bins Out</div><div class="tn">Put trash &amp; recycling out tonight. Pickup: Tuesday.</div>';
+        col.appendChild(trash);
+      }
+
+      grid.appendChild(col);
+    }
+
+    if(footEl) footEl.textContent=sched.foot;
+  }
+
+  renderWeek('wg1','wr1','wm1','wf1',monday,true);
+  renderWeek('wg2','wr2','wm2','wf2',nextMon,false);
 
   // update SEC-03 description
   const sec3desc=document.querySelector('#week .sdesc');
-  if(sec3desc) sec3desc.textContent='// Saturday = mow day · Water twice a week · Wednesday weed patrol · Week of '+MONTHS[monday.getMonth()]+' '+monday.getDate();
-
-  // ── TRASH BIN REMINDER ──
-  // Inject into Monday col of whichever week is visible, and Sunday as heads-up
-  // Pickup is Tuesday — bins go out Monday evening
-  function addTrashTask(colId){
-    const col=document.getElementById(colId);
-    if(!col) return;
-    const t=document.createElement('div');
-    t.className='task';
-    t.innerHTML='<div class="td" style="background:#aaaaaa;box-shadow:none"></div><div class="tt">🗑️ Bins Out</div><div class="tn">Put trash &amp; recycling out tonight. Pickup: Tuesday morning.</div>';
-    col.appendChild(t);
-  }
-  function addTrashReminder(colId){
-    const col=document.getElementById(colId);
-    if(!col) return;
-    const t=document.createElement('div');
-    t.className='task';
-    t.innerHTML='<div class="td" style="background:#555;box-shadow:none"></div><div class="tt">🗑️ Bins tomorrow</div><div class="tn">Reminder: put bins out tomorrow evening (Monday).</div>';
-    col.appendChild(t);
-  }
-  // Week 1 Monday (index 0) and Sunday (index 6 = reminder for next Monday)
-  addTrashTask('wc1-0');
-  addTrashReminder('wc1-6');
-  // Week 2 Monday
-  addTrashTask('wc2-0');
+  if(sec3desc) sec3desc.textContent='// Always current · Updates automatically each week · Zone 9b Citrus Heights';
 }
 initWeekDates();
 
