@@ -3,692 +3,934 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LAWN RESCUE — Mission Control</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<title>LAWN OPS — Mission Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0a0f0a;
-  --bg2: #0f160f;
-  --bg3: #141e14;
-  --panel: #111811;
-  --border: #1e321e;
-  --border2: #2a4a2a;
-  --green: #39ff14;
-  --green2: #22cc00;
-  --green3: #0f7a00;
-  --green-dim: rgba(57,255,20,0.12);
-  --green-glow: 0 0 12px rgba(57,255,20,0.4);
-  --green-glow-sm: 0 0 6px rgba(57,255,20,0.25);
-  --amber: #ffb700;
-  --amber-dim: rgba(255,183,0,0.12);
-  --red: #ff3333;
-  --red-dim: rgba(255,51,51,0.12);
-  --cyan: #00e5ff;
-  --text: #c8e6c8;
-  --text2: #7aab7a;
-  --text3: #22cc00;
-  --mono: 'Share Tech Mono', monospace;
-  --display: 'Exo 2', sans-serif;
-  --scan: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+:root{
+  --bg:#080d08;--bg2:#0c130c;--bg3:#111811;--panel:#0f160f;
+  --border:#1a2e1a;--border2:#254225;
+  --green:#39ff14;--green2:#22cc00;--green3:#0d6600;--green4:#063300;
+  --gdim:rgba(57,255,20,0.1);--gglow:0 0 10px rgba(57,255,20,0.35);--gglow-sm:0 0 5px rgba(57,255,20,0.2);
+  --amber:#ffb700;--adim:rgba(255,183,0,0.1);
+  --red:#ff3333;--rdim:rgba(255,51,51,0.1);
+  --blue:#4488ff;--bdim:rgba(68,136,255,0.1);
+  --cyan:#00e5ff;
+  --text:#b8d8b8;--text2:#6a9a6a;--text3:#3a5a3a;
+  --mono:'Share Tech Mono',monospace;--disp:'Exo 2',sans-serif;
+  --scan:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{font-family:var(--display);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;cursor:crosshair;}
-body::before{content:'';position:fixed;inset:0;background:var(--scan);pointer-events:none;z-index:9999;opacity:0.4;}
+body{font-family:var(--disp);background:var(--bg);color:var(--text);overflow-x:hidden;cursor:crosshair;}
+body::before{content:'';position:fixed;inset:0;background:var(--scan);pointer-events:none;z-index:9998;opacity:.35;}
 
-/* BOOT */
-#boot{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;animation:bootOut 0.4s ease forwards 3s;}
-@keyframes bootOut{to{opacity:0;pointer-events:none;}}
-.bl{font-family:var(--mono);font-size:13px;color:var(--green);text-shadow:var(--green-glow-sm);overflow:hidden;white-space:nowrap;width:0;}
-.bl:nth-child(1){animation:type 0.4s steps(40) 0.1s forwards;}
-.bl:nth-child(2){animation:type 0.5s steps(40) 0.7s forwards;}
-.bl:nth-child(3){animation:type 0.5s steps(40) 1.3s forwards;}
-.bl:nth-child(4){animation:type 0.4s steps(40) 1.9s forwards;color:var(--amber);}
+/* ── BOOT ── */
+#boot{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;animation:bOut .3s ease forwards 2.6s;}
+@keyframes bOut{to{opacity:0;pointer-events:none;}}
+.bl{font-family:var(--mono);font-size:12px;color:var(--green);text-shadow:var(--gglow-sm);overflow:hidden;white-space:nowrap;width:0;text-align:left;}
+.bl:nth-child(1){animation:type .4s steps(38) .1s forwards;}
+.bl:nth-child(2){animation:type .5s steps(38) .6s forwards;}
+.bl:nth-child(3){animation:type .4s steps(38) 1.2s forwards;color:var(--amber);}
 @keyframes type{to{width:100%;}}
-.bb{width:260px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:4px;}
-.bb-fill{height:100%;background:var(--green);animation:load 2.4s ease 0.1s both;box-shadow:var(--green-glow-sm);}
-@keyframes load{from{width:0;}to{width:100%;}}
+.bbar{width:240px;height:2px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:4px;}
+.bfill{height:100%;background:var(--green);box-shadow:var(--gglow-sm);animation:bload 2s ease .1s both;}
+@keyframes bload{from{width:0;}to{width:100%;}}
 
-/* MAIN */
-#main{animation:fadeIn 0.5s ease 3.2s both;}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+/* ── MAIN ── */
+#app{animation:fIn .4s ease 2.8s both;}
+@keyframes fIn{from{opacity:0;}to{opacity:1;}}
 
-/* HEADER */
-.hdr{border-bottom:1px solid var(--border2);padding:0 20px;background:var(--panel);position:sticky;top:0;z-index:100;display:flex;align-items:stretch;}
-.hdr-logo{font-family:var(--display);font-weight:900;font-size:14px;letter-spacing:.14em;color:var(--green);text-shadow:var(--green-glow-sm);text-transform:uppercase;padding:13px 18px 13px 0;border-right:1px solid var(--border2);margin-right:6px;display:flex;align-items:center;gap:7px;white-space:nowrap;}
-.hdr-logo::before{content:'◉';font-size:9px;animation:pulse 2s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.25}}
-.nav-links{display:flex;overflow-x:auto;scrollbar-width:none;flex:1;}
-.nav-links::-webkit-scrollbar{display:none;}
-.nav-link{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);text-decoration:none;padding:0 14px;display:flex;align-items:center;border-right:1px solid var(--border);transition:all .15s;white-space:nowrap;}
-.nav-link:hover{color:var(--green);background:var(--green-dim);}
-#clock{font-family:var(--mono);font-size:11px;color:var(--text3);display:flex;align-items:center;padding-left:14px;white-space:nowrap;}
+/* ── HEADER ── */
+.hdr{background:var(--panel);border-bottom:1px solid var(--border2);position:sticky;top:0;z-index:100;display:flex;align-items:stretch;padding:0 20px;}
+.logo{font-family:var(--disp);font-weight:900;font-size:13px;letter-spacing:.16em;color:var(--green);text-shadow:var(--gglow-sm);text-transform:uppercase;display:flex;align-items:center;gap:7px;padding:12px 16px 12px 0;border-right:1px solid var(--border2);margin-right:4px;white-space:nowrap;}
+.logo::before{content:'◉';font-size:8px;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.nav{display:flex;overflow-x:auto;scrollbar-width:none;flex:1;}
+.nav::-webkit-scrollbar{display:none;}
+.nav a{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);text-decoration:none;padding:0 13px;display:flex;align-items:center;border-right:1px solid var(--border);transition:all .15s;white-space:nowrap;}
+.nav a:hover{color:var(--green);background:var(--gdim);}
+#clk{font-family:var(--mono);font-size:10px;color:var(--text3);display:flex;align-items:center;padding-left:13px;white-space:nowrap;}
 
-/* HERO */
-.hero{padding:44px 24px 36px;max-width:1000px;margin:0 auto;}
-.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:7px;}
-.eyebrow::before{content:'▶';color:var(--green);font-size:7px;}
-h1.title{font-family:var(--display);font-weight:900;font-size:clamp(40px,9vw,84px);line-height:.92;text-transform:uppercase;letter-spacing:-.01em;color:white;margin-bottom:6px;}
-h1.title .acc{color:var(--green);text-shadow:var(--green-glow);}
-h1.title .dim{color:var(--text3);}
-.hero-sub{font-family:var(--mono);font-size:12px;color:var(--text2);margin:14px 0 28px;max-width:480px;line-height:1.8;}
-.blink{animation:blink 1.2s step-end infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+/* ── WRAP ── */
+.wrap{max-width:980px;margin:0 auto;padding:0 20px;}
 
-/* STAT CARDS */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:12px;}
-.sc{background:var(--panel);border:1px solid var(--border2);border-radius:5px;padding:12px 14px;position:relative;overflow:hidden;}
-.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-.sc.g::before{background:var(--green);box-shadow:var(--green-glow-sm);}
-.sc.a::before{background:var(--amber);}
-.sc.r::before{background:var(--red);}
-.sc-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
-.sc-val{font-family:var(--display);font-weight:700;font-size:20px;line-height:1;margin-bottom:3px;}
-.sc.g .sc-val{color:var(--green);}
-.sc.a .sc-val{color:var(--amber);}
-.sc.r .sc-val{color:var(--red);}
-.sc-sub{font-family:var(--mono);font-size:9px;color:var(--text3);}
-.gauge-r{display:flex;align-items:center;gap:8px;margin-top:5px;}
-.gauge{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
-.gf{height:100%;border-radius:3px;animation:gin 1.5s ease 3.4s both;}
-@keyframes gin{from{width:0 !important;}}
-.gf.r{background:var(--red);box-shadow:0 0 5px rgba(255,51,51,.5);}
-.gf.a{background:var(--amber);}
-.gf.g{background:var(--green);box-shadow:var(--green-glow-sm);}
-.gpct{font-family:var(--mono);font-size:10px;color:var(--text2);width:32px;text-align:right;}
+/* ── WEATHER HERO ── */
+.weather-hero{padding:32px 0 24px;}
+.w-top{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.w-current{background:var(--panel);border:1px solid var(--border2);border-top:2px solid var(--green);border-radius:6px;padding:20px 22px;position:relative;overflow:hidden;}
+.w-current::after{content:'CITRUS HEIGHTS CA';position:absolute;bottom:-4px;right:8px;font-family:var(--disp);font-weight:900;font-size:40px;color:rgba(57,255,20,.04);letter-spacing:.06em;pointer-events:none;white-space:nowrap;}
+.w-label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.w-temp{font-family:var(--disp);font-weight:900;font-size:64px;color:var(--green);text-shadow:var(--gglow);line-height:1;margin-bottom:4px;}
+.w-temp sup{font-size:24px;vertical-align:super;}
+.w-cond{font-size:14px;color:var(--text2);margin-bottom:10px;font-family:var(--mono);}
+.w-meta{display:flex;gap:16px;flex-wrap:wrap;}
+.w-meta-item{font-family:var(--mono);font-size:11px;color:var(--text3);}
+.w-meta-item span{color:var(--text2);}
+.w-alert{background:var(--adim);border:1px solid rgba(255,183,0,.25);border-radius:5px;padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--amber);margin-top:12px;line-height:1.6;display:none;}
+.w-alert.show{display:block;}
 
-/* LAYOUT */
-.wrap{max-width:1000px;margin:0 auto;padding:0 24px;}
-.sec{padding:44px 0;border-top:1px solid var(--border);}
-.sh{margin-bottom:24px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;}
-.sid{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);padding:3px 7px;border:1px solid var(--border2);border-radius:3px;}
-.stitle{font-family:var(--display);font-weight:900;font-size:clamp(24px,4vw,38px);text-transform:uppercase;letter-spacing:.04em;color:white;line-height:1;}
+/* hourly chart */
+.w-hourly{background:var(--panel);border:1px solid var(--border2);border-radius:6px;padding:16px 18px;}
+.w-hourly-title{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;}
+.chart-wrap{position:relative;height:90px;}
+#hourlyCanvas{width:100%;height:100%;}
+.chart-times{display:flex;justify-content:space-between;margin-top:6px;}
+.chart-times span{font-family:var(--mono);font-size:9px;color:var(--text3);}
+
+/* 7-day */
+.w-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:0;}
+.w-day{background:var(--panel);border:1px solid var(--border2);border-radius:5px;padding:10px 6px;text-align:center;transition:border-color .15s;}
+.w-day:hover{border-color:var(--green3);}
+.w-day.today{border-color:var(--green);background:var(--gdim);}
+.wd-name{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.wd-icon{font-size:18px;line-height:1;margin-bottom:6px;}
+.wd-hi{font-family:var(--disp);font-weight:700;font-size:16px;color:var(--text);}
+.w-day.today .wd-hi{color:var(--green);}
+.wd-rain{font-family:var(--mono);font-size:9px;color:var(--blue);margin-top:3px;}
+.wd-rain.high{color:var(--amber);}
+.w-loading{font-family:var(--mono);font-size:12px;color:var(--text3);padding:20px;text-align:center;}
+
+/* ── LAWN ALERT BANNER ── */
+.lawn-alert{margin:0 0 20px;border:1px solid;border-radius:5px;padding:12px 16px;font-family:var(--mono);font-size:12px;line-height:1.7;display:flex;gap:10px;align-items:flex-start;}
+.lawn-alert.amber{border-color:rgba(255,183,0,.3);background:var(--adim);color:var(--amber);}
+.lawn-alert.green{border-color:rgba(57,255,20,.2);background:var(--gdim);color:var(--green2);}
+.lawn-alert.red{border-color:rgba(255,51,51,.3);background:var(--rdim);color:var(--red);}
+.lawn-alert.blue{border-color:rgba(68,136,255,.3);background:var(--bdim);color:var(--blue);}
+
+/* ── SECTIONS ── */
+.sec{padding:36px 0;border-top:1px solid var(--border);}
+.sh{margin-bottom:20px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;}
+.sid{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding:2px 6px;border:1px solid var(--border2);border-radius:2px;}
+.stitle{font-family:var(--disp);font-weight:900;font-size:clamp(22px,4vw,36px);text-transform:uppercase;letter-spacing:.04em;color:white;line-height:1;}
 .stitle .g{color:var(--green);}
-.sdesc{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:5px;line-height:1.7;}
+.sdesc{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:4px;line-height:1.7;}
 
-/* BRIEFING */
-.brief{background:var(--panel);border:1px solid var(--border2);border-left:3px solid var(--green);border-radius:0 5px 5px 0;padding:18px 22px;margin-bottom:14px;}
-.btag{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:7px;display:flex;align-items:center;gap:5px;}
-.btag::before{content:'●';animation:pulse 1.5s ease-in-out infinite;}
-.btitle{font-family:var(--display);font-weight:700;font-size:18px;color:white;margin-bottom:12px;}
-.objs{list-style:none;}
-.obj{display:flex;gap:11px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text);line-height:1.5;}
-.obj:last-child{border-bottom:none;}
-.onum{font-family:var(--mono);font-size:10px;color:var(--green);background:var(--green-dim);border:1px solid var(--green3);width:20px;height:20px;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
-.quip{background:var(--amber-dim);border:1px solid rgba(255,183,0,.2);border-radius:4px;padding:9px 13px;font-family:var(--mono);font-size:11px;color:var(--amber);line-height:1.7;margin:14px 0;display:flex;gap:9px;}
+/* ── PROGRESS STATUS ── */
+.status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:24px;}
+.status-card{background:var(--panel);border:1px solid var(--border2);border-radius:5px;padding:12px 14px;position:relative;overflow:hidden;}
+.status-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.status-card.done::before{background:var(--green);box-shadow:var(--gglow-sm);}
+.status-card.pending::before{background:var(--amber);}
+.status-card.future::before{background:var(--border2);}
+.sc-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
+.sc-val{font-family:var(--disp);font-weight:700;font-size:14px;line-height:1.2;}
+.status-card.done .sc-val{color:var(--green);}
+.status-card.pending .sc-val{color:var(--amber);}
+.status-card.future .sc-val{color:var(--text3);}
+.sc-sub{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:3px;}
 
-/* WEEK */
-.wtabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;}
-.wtab{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 13px;background:var(--panel);border:1px solid var(--border2);border-radius:3px;color:var(--text3);cursor:pointer;transition:all .15s;}
+/* ── WEEK GRID ── */
+.wtabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;}
+.wtab{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:5px 12px;background:var(--panel);border:1px solid var(--border2);border-radius:3px;color:var(--text3);cursor:pointer;transition:all .15s;}
 .wtab:hover{color:var(--green);border-color:var(--green3);}
-.wtab.on{background:var(--green-dim);border-color:var(--green);color:var(--green);box-shadow:var(--green-glow-sm);}
+.wtab.on{background:var(--gdim);border-color:var(--green);color:var(--green);}
 .wpanel{display:none;}
 .wpanel.show{display:block;}
-.wbar{background:var(--panel);border:1px solid var(--border2);border-bottom:none;border-radius:5px 5px 0 0;padding:11px 16px;display:flex;align-items:center;gap:11px;flex-wrap:wrap;}
-.wcn{font-family:var(--display);font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.08em;color:var(--green);text-shadow:var(--green-glow-sm);}
+.wbar{background:var(--panel);border:1px solid var(--border2);border-bottom:none;border-radius:5px 5px 0 0;padding:10px 15px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.wcn{font-family:var(--disp);font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--green);text-shadow:var(--gglow-sm);}
 .wmis{font-size:12px;color:var(--text2);flex:1;font-family:var(--mono);}
-.wrange{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.06em;}
+.wrange{font-family:var(--mono);font-size:9px;color:var(--text3);}
 .dgrid{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--border2);border-radius:0 0 5px 5px;overflow:hidden;}
-.dc{border-right:1px solid var(--border);min-height:150px;display:flex;flex-direction:column;}
+.dc{border-right:1px solid var(--border);min-height:130px;display:flex;flex-direction:column;}
 .dc:last-child{border-right:none;}
-.dc.today{background:rgba(57,255,20,.03);}
-.dc.rest{background:rgba(0,0,0,.2);}
-.dhdr{padding:7px 5px;border-bottom:1px solid var(--border);text-align:center;background:var(--bg3);position:relative;}
-.dname{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;}
-.dnum{font-family:var(--display);font-weight:700;font-size:17px;color:var(--text2);line-height:1.1;}
-.dc.today .dhdr{background:var(--green-dim);border-bottom-color:var(--green3);}
-.dc.today .dnum{color:var(--green);text-shadow:var(--green-glow-sm);}
+.dc.today{background:rgba(57,255,20,.025);}
+.dc.rest{background:rgba(0,0,0,.15);}
+.dhdr{padding:6px 4px;border-bottom:1px solid var(--border);text-align:center;background:var(--bg3);position:relative;}
+.dname{font-family:var(--mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;}
+.dnum{font-family:var(--disp);font-weight:700;font-size:16px;color:var(--text2);line-height:1.1;}
+.dc.today .dhdr{background:var(--gdim);border-bottom-color:var(--green3);}
+.dc.today .dnum{color:var(--green);text-shadow:var(--gglow-sm);}
 .dc.today .dname{color:var(--green2);}
-.nowpip{position:absolute;top:3px;right:3px;font-family:var(--mono);font-size:6px;color:var(--green);letter-spacing:.05em;text-transform:uppercase;background:var(--green-dim);padding:1px 3px;border-radius:2px;border:1px solid var(--green3);}
+.nowpip{position:absolute;top:2px;right:2px;font-family:var(--mono);font-size:6px;color:var(--green);background:var(--gdim);padding:1px 3px;border-radius:2px;border:1px solid var(--green3);}
 .task{padding:7px 6px;border-bottom:1px solid var(--border);flex:1;transition:background .15s;}
 .task:last-child{border-bottom:none;}
-.task:hover{background:rgba(57,255,20,.04);}
-.td{width:5px;height:5px;border-radius:50%;margin-bottom:4px;}
-.td.mow{background:var(--green);box-shadow:0 0 4px rgba(57,255,20,.6);}
-.td.pre{background:var(--cyan);}
-.td.post{background:var(--amber);}
-.td.buy{background:var(--red);}
-.td.beds{background:#a0785a;}
+.task:hover{background:rgba(57,255,20,.035);}
+.td{width:5px;height:5px;border-radius:50%;margin-bottom:3px;}
+.td.mow{background:var(--green);box-shadow:0 0 4px rgba(57,255,20,.5);}
+.td.water{background:var(--blue);}
+.td.inspect{background:var(--amber);}
 .td.feed{background:#d4a800;}
+.td.beds{background:#9a6840;}
 .td.rest{background:var(--border2);}
-.td.water{background:#4488ff;}
-.tt{font-size:9px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em;font-family:var(--display);}
+.td.aerate{background:var(--cyan);}
+.td.seed{background:#88cc44;}
+.tt{font-size:9px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:2px;text-transform:uppercase;letter-spacing:.03em;font-family:var(--disp);}
 .tn{font-size:8px;color:var(--text3);line-height:1.5;font-family:var(--mono);}
-.wfoot{margin-top:9px;padding:9px 14px;background:var(--panel);border:1px solid var(--border);border-left:2px solid var(--green);border-radius:0 4px 4px 0;font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.6;}
-.wleg{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;padding:10px 0;border-top:1px solid var(--border);}
-.leg{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
-.ld{width:7px;height:7px;border-radius:50%;}
+.wfoot{margin-top:8px;padding:9px 13px;background:var(--panel);border:1px solid var(--border);border-left:2px solid var(--green);border-radius:0 4px 4px 0;font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.6;}
+.wleg{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;padding:10px 0;border-top:1px solid var(--border);}
+.leg{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;}
+.ld{width:6px;height:6px;border-radius:50%;}
 
-/* CHECKLIST */
-.pwrap{margin-bottom:22px;}
+/* ── CHECKLIST ── */
 .ptop{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
-.plbl{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
-.ppct{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--green);}
-.pbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
-.pf{height:100%;background:var(--green);box-shadow:var(--green-glow-sm);border-radius:2px;transition:width .6s ease;}
-.clg{margin-bottom:22px;}
-.clgh{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);padding:5px 0;border-bottom:1px solid var(--border);margin-bottom:3px;display:flex;align-items:center;gap:7px;}
+.plbl{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
+.ppct{font-family:var(--mono);font-size:13px;color:var(--green);}
+.pbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:20px;}
+.pf{height:100%;background:var(--green);box-shadow:var(--gglow-sm);border-radius:2px;transition:width .5s ease;}
+.clg{margin-bottom:20px;}
+.clgh{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding:5px 0;border-bottom:1px solid var(--border);margin-bottom:2px;display:flex;align-items:center;gap:6px;}
 .clgh::before{content:'//';color:var(--green3);}
-.cli{display:flex;align-items:flex-start;gap:11px;padding:9px 11px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;user-select:none;border-radius:2px;}
-.cli:hover{background:var(--green-dim);}
+.cli{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;user-select:none;}
+.cli:hover{background:var(--gdim);}
 .cli.done{opacity:.4;}
 .cli.done .clt{text-decoration:line-through;color:var(--text3);}
-.clb{width:16px;height:16px;border:1px solid var(--border2);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:2px;font-family:var(--mono);color:transparent;transition:all .15s;background:var(--bg3);}
-.cli.done .clb{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+.clb{width:16px;height:16px;border:1px solid var(--border2);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:2px;font-family:var(--mono);color:transparent;background:var(--bg3);transition:all .12s;}
+.cli.done .clb{background:var(--gdim);border-color:var(--green);color:var(--green);}
 .clt{font-size:13px;font-weight:600;color:var(--text);flex:1;line-height:1.4;}
 .cls{font-size:11px;color:var(--text3);margin-top:2px;font-family:var(--mono);line-height:1.5;}
-.clbadge{font-family:var(--mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:2px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
-.b-hot{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,51,51,.2);}
-.b-now{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(255,183,0,.2);}
+.cbadge{font-family:var(--mono);font-size:8px;letter-spacing:.07em;text-transform:uppercase;padding:2px 6px;border-radius:2px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.b-done{background:var(--gdim);color:var(--green2);border:1px solid var(--green3);}
+.b-now{background:var(--adim);color:var(--amber);border:1px solid rgba(255,183,0,.2);}
 .b-soon{background:var(--border);color:var(--text3);border:1px solid var(--border2);}
+.b-fall{background:rgba(68,136,255,.1);color:var(--blue);border:1px solid rgba(68,136,255,.2);}
 
-/* WEED INTEL */
-.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:11px;}
-.wcard{background:var(--panel);border:1px solid var(--border2);border-radius:5px;overflow:hidden;transition:border-color .2s,box-shadow .2s;}
-.wcard:hover{border-color:var(--green3);box-shadow:0 0 14px rgba(57,255,20,.07);}
-.whdr{padding:9px 13px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.wname{font-weight:700;font-size:12px;color:white;text-transform:uppercase;letter-spacing:.04em;}
-.ttag{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:2px;}
-.ttag.hi{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,51,51,.2);}
-.ttag.md{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(255,183,0,.2);}
-.ttag.lo{background:var(--green-dim);color:var(--green2);border:1px solid var(--green3);}
-.wbody{padding:9px 13px;font-family:var(--mono);font-size:10px;color:var(--text3);line-height:1.7;}
-.wtac{color:var(--cyan);margin-top:5px;}
-.wtac::before{content:'► ';}
-
-/* HERB TABLE */
-.htbl{width:100%;border-collapse:collapse;font-size:11px;}
-.htbl th{background:var(--bg3);color:var(--text3);font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:9px 13px;text-align:left;border-bottom:1px solid var(--border2);}
-.htbl td{padding:9px 13px;border-bottom:1px solid var(--border);color:var(--text2);font-family:var(--mono);vertical-align:top;line-height:1.6;}
-.htbl tr:last-child td{border-bottom:none;}
-.htbl tr:hover td{background:rgba(57,255,20,.02);}
-.htbl td:first-child{color:var(--text);font-weight:600;}
-
-/* GRASS */
-.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:11px;}
-.gc{background:var(--panel);border:1px solid var(--border2);border-radius:5px;overflow:hidden;transition:all .2s;}
-.gc:hover{border-color:var(--green3);}
-.gc.rec{border-color:var(--green);box-shadow:0 0 18px rgba(57,255,20,.07);}
-.gch{padding:11px 13px;background:var(--bg3);border-bottom:1px solid var(--border2);display:flex;align-items:flex-start;justify-content:space-between;gap:7px;}
-.gcn{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:white;}
-.gc.rec .gcn{color:var(--green);text-shadow:var(--green-glow-sm);}
-.gct{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:2px;}
-.rpip{font-family:var(--mono);font-size:8px;background:var(--green-dim);color:var(--green);border:1px solid var(--green3);padding:2px 6px;border-radius:2px;white-space:nowrap;flex-shrink:0;}
-.gcb{padding:11px 13px;}
-.gst{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:10px;}
-.gst:last-child{border-bottom:none;}
-.gst .l{color:var(--text3);}
-.gst .v{color:var(--text);}
-.dots{display:flex;gap:3px;align-items:center;}
-.d{width:6px;height:6px;border-radius:50%;background:var(--border2);}
-.d.on{background:var(--green);box-shadow:0 0 3px rgba(57,255,20,.5);}
-
-/* CALENDAR */
-.calgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:11px;}
+/* ── CALENDAR ── */
+.calgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;}
 .calm{background:var(--panel);border:1px solid var(--border2);border-radius:5px;overflow:hidden;}
 .calm.now{border-color:var(--green);}
-.calmh{background:var(--bg3);border-bottom:1px solid var(--border2);padding:7px 11px;font-family:var(--display);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:white;display:flex;align-items:center;justify-content:space-between;}
+.calm.done{opacity:.55;}
+.calmh{background:var(--bg3);border-bottom:1px solid var(--border2);padding:6px 10px;font-family:var(--disp);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:white;display:flex;align-items:center;justify-content:space-between;}
 .calm.now .calmh{color:var(--green);}
-.adot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s ease infinite;box-shadow:var(--green-glow-sm);}
-.calts{padding:7px 11px;}
-.calt{display:flex;gap:6px;align-items:flex-start;padding:3px 0;font-family:var(--mono);font-size:9px;color:var(--text3);line-height:1.5;border-bottom:1px solid var(--border);}
+.calm.done .calmh{color:var(--text3);}
+.adot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s ease infinite;box-shadow:var(--gglow-sm);}
+.cdot-done{width:5px;height:5px;border-radius:50%;background:var(--green2);}
+.calts{padding:6px 10px;}
+.calt{display:flex;gap:5px;align-items:flex-start;padding:3px 0;font-family:var(--mono);font-size:9px;color:var(--text3);line-height:1.5;border-bottom:1px solid var(--border);}
 .calt:last-child{border-bottom:none;}
 .calt::before{content:'▸';color:var(--green3);flex-shrink:0;}
 
-/* RADAR */
-.radar{width:50px;height:50px;border:1px solid var(--border2);border-radius:50%;position:relative;margin:0 auto 28px;opacity:.45;}
-.radar::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,rgba(57,255,20,.3) 60deg,transparent 61deg);animation:spin 3s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.radar::after{content:'';position:absolute;top:50%;left:50%;width:3px;height:3px;background:var(--green);border-radius:50%;transform:translate(-50%,-50%);box-shadow:var(--green-glow-sm);}
+/* ── WEED INTEL ── */
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px;}
+.wcard{background:var(--panel);border:1px solid var(--border2);border-radius:5px;overflow:hidden;transition:border-color .15s;}
+.wcard:hover{border-color:var(--green3);}
+.whdr{padding:8px 12px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.wname{font-weight:700;font-size:11px;color:white;text-transform:uppercase;letter-spacing:.04em;}
+.ttag{font-family:var(--mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;padding:2px 5px;border-radius:2px;}
+.ttag.hi{background:var(--rdim);color:var(--red);border:1px solid rgba(255,51,51,.2);}
+.ttag.md{background:var(--adim);color:var(--amber);border:1px solid rgba(255,183,0,.2);}
+.ttag.lo{background:var(--gdim);color:var(--green2);border:1px solid var(--green3);}
+.wbody{padding:8px 12px;font-family:var(--mono);font-size:10px;color:var(--text3);line-height:1.7;}
+.wtac{color:var(--cyan);margin-top:4px;}
+.wtac::before{content:'► ';}
 
-/* STORE */
-.sbanner{background:var(--panel);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:0 5px 5px 0;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:11px;}
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:11px;}
+.tbl th{background:var(--bg3);color:var(--text3);font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border2);}
+.tbl td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text2);font-family:var(--mono);vertical-align:top;line-height:1.6;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:rgba(57,255,20,.015);}
+.tbl td:first-child{color:var(--text);font-weight:600;}
+
+/* ── ARMORY ── */
+.sbanner{background:var(--panel);border:1px solid var(--border2);border-left:3px solid var(--amber);border-radius:0 5px 5px 0;padding:13px 17px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 .sbname{font-weight:700;font-size:13px;color:white;}
 .sbsub{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:2px;}
-.sbbtn{background:#f96302;color:white;font-family:var(--mono);font-size:11px;font-weight:600;padding:8px 16px;border-radius:3px;text-decoration:none;white-space:nowrap;transition:opacity .15s;letter-spacing:.04em;}
+.sbbtn{background:#f96302;color:white;font-family:var(--mono);font-size:11px;font-weight:600;padding:7px 15px;border-radius:3px;text-decoration:none;transition:opacity .15s;}
 .sbbtn:hover{opacity:.85;}
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:11px;}
-.pcard{background:var(--panel);border:1px solid var(--border2);border-radius:5px;padding:13px 15px;transition:border-color .2s;}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;}
+.pcard{background:var(--panel);border:1px solid var(--border2);border-radius:5px;padding:12px 14px;transition:border-color .15s;}
 .pcard:hover{border-color:var(--green3);}
-.ptop{display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;}
-.pico{font-size:18px;flex-shrink:0;margin-top:2px;}
+.ptop{display:flex;gap:9px;align-items:flex-start;margin-bottom:8px;}
+.pico{font-size:17px;flex-shrink:0;margin-top:2px;}
 .pname{font-weight:700;font-size:12px;color:white;text-transform:uppercase;letter-spacing:.04em;}
-.pbrand{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:2px;}
-.pdesc{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:9px;line-height:1.6;}
-.pmeta{display:flex;justify-content:space-between;align-items:center;gap:7px;flex-wrap:wrap;}
-.ptiming{font-family:var(--mono);font-size:9px;color:var(--green2);letter-spacing:.06em;text-transform:uppercase;}
-.hdbtn{display:inline-flex;align-items:center;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.04em;padding:4px 10px;border-radius:3px;background:#f96302;color:white;text-decoration:none;transition:opacity .15s;white-space:nowrap;}
+.pbrand{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:1px;}
+.pdesc{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:8px;line-height:1.6;}
+.pmeta{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;}
+.ptiming{font-family:var(--mono);font-size:9px;color:var(--green2);letter-spacing:.05em;text-transform:uppercase;}
+.hdbtn{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.04em;padding:4px 9px;border-radius:3px;background:#f96302;color:white;text-decoration:none;transition:opacity .15s;}
 .hdbtn:hover{opacity:.85;}
 
-/* FOOTER */
-.foot{border-top:1px solid var(--border);padding:28px 24px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--text3);line-height:1.9;}
+/* ── UTIL ── */
+.divider{height:1px;background:var(--border);margin:20px 0;}
+.shdr{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border2);}
+.shdr.g{color:var(--green);}
+.quip{background:var(--adim);border:1px solid rgba(255,183,0,.2);border-radius:4px;padding:9px 12px;font-family:var(--mono);font-size:11px;color:var(--amber);line-height:1.7;margin:12px 0;display:flex;gap:8px;}
+
+/* ── PROJECTS ── */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px;}
+.proj-card{background:var(--panel);border:1px solid var(--border2);border-radius:6px;overflow:hidden;transition:border-color .2s;}
+.proj-card:hover{border-color:var(--green3);}
+.proj-card.urgent{border-color:var(--amber);}
+.proj-card.urgent .proj-hdr{border-bottom-color:rgba(255,183,0,.25);}
+.proj-hdr{background:var(--bg3);border-bottom:1px solid var(--border2);padding:13px 15px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.proj-num{font-family:var(--disp);font-weight:900;font-size:32px;color:var(--green3);line-height:1;flex-shrink:0;margin-right:2px;}
+.proj-card.urgent .proj-num{color:var(--amber);}
+.proj-title{font-weight:700;font-size:15px;color:white;text-transform:uppercase;letter-spacing:.05em;line-height:1.2;}
+.proj-sub{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:3px;}
+.proj-status{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.ps-now{background:var(--adim);color:var(--amber);border:1px solid rgba(255,183,0,.2);}
+.ps-next{background:var(--gdim);color:var(--green2);border:1px solid var(--green3);}
+.ps-later{background:var(--border);color:var(--text3);border:1px solid var(--border2);}
+.proj-body{padding:14px 15px;}
+.proj-why{font-family:var(--mono);font-size:11px;color:var(--amber);line-height:1.7;margin-bottom:12px;padding:8px 10px;background:var(--adim);border-left:2px solid var(--amber);border-radius:0 3px 3px 0;}
+.proj-card:not(.urgent) .proj-why{color:var(--text2);background:var(--gdim);border-left-color:var(--green3);}
+
+/* expanded project detail */
+.proj-detail{display:none;border-top:1px solid var(--border);}
+.proj-detail.open{display:block;}
+.proj-toggle{width:100%;background:none;border:none;border-top:1px solid var(--border);padding:9px 15px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);cursor:pointer;text-align:left;display:flex;align-items:center;gap:6px;transition:all .15s;}
+.proj-toggle:hover{color:var(--green);background:var(--gdim);}
+.proj-toggle::before{content:'▶';font-size:8px;transition:transform .2s;}
+.proj-toggle.open::before{transform:rotate(90deg);}
+
+/* steps */
+.steps{padding:14px 15px;border-bottom:1px solid var(--border);}
+.steps-title{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.steps-title::before{content:'//';color:var(--green3);}
+.step{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-n{font-family:var(--disp);font-weight:900;font-size:18px;color:var(--green3);line-height:1;flex-shrink:0;width:22px;}
+.proj-card.urgent .step-n{color:var(--amber);}
+.step-content{}
+.step-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.3;}
+.step-desc{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:3px;line-height:1.6;}
+.step-tip{font-family:var(--mono);font-size:10px;color:var(--cyan);margin-top:4px;line-height:1.6;}
+.step-tip::before{content:'💡 ';}
+
+/* supplies */
+.proj-supplies{padding:12px 15px;}
+.supply-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.supply-row:last-child{border-bottom:none;}
+.supply-name{font-size:13px;color:var(--text);font-weight:500;}
+.supply-detail{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:1px;}
+.supply-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.supply-cost{font-family:var(--mono);font-size:11px;color:var(--green2);white-space:nowrap;}
+
+/* proj checklist */
+.proj-checks{padding:12px 15px;border-top:1px solid var(--border);}
+.pcl{display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:background .12s;}
+.pcl:last-child{border-bottom:none;}
+.pcl:hover{background:var(--gdim);}
+.pcl.done{opacity:.4;}
+.pcl.done .pclt{text-decoration:line-through;color:var(--text3);}
+.pclb{width:15px;height:15px;border:1px solid var(--border2);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);color:transparent;background:var(--bg3);}
+.pcl.done .pclb{background:var(--gdim);border-color:var(--green);color:var(--green);}
+.pclt{font-size:12px;color:var(--text);}
+
+/* ── FOOTER ── */
+.foot{border-top:1px solid var(--border);padding:24px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--text3);line-height:1.9;}
 .foot a{color:var(--green2);text-decoration:none;}
 .foot a:hover{color:var(--green);}
 
-/* UTILS */
-.divider{height:1px;background:var(--border);margin:24px 0;}
-.shdr{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:11px;padding-bottom:7px;border-bottom:1px solid var(--border2);}
-.shdr.g{color:var(--green);}
-
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px;height:5px;}
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
-::-webkit-scrollbar-thumb:hover{background:var(--green3);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 
-/* MOBILE */
-@media(max-width:700px){
+@media(max-width:680px){
   .dgrid{grid-template-columns:repeat(7,minmax(0,1fr));}
   .tn{display:none;}
-  .dnum{font-size:13px;}
+  .dnum{font-size:12px;}
   .wmis{display:none;}
-  h1.title{font-size:42px;}
+  .w-top{grid-template-columns:1fr;}
+  .w-week{grid-template-columns:repeat(7,1fr);}
 }
 </style>
 </head>
 <body>
 
+<!-- BOOT -->
 <div id="boot">
-  <div style="text-align:left;width:290px">
-    <div class="bl">LAWN RESCUE OS v2.0 — CITRUS HEIGHTS CA</div>
-    <div class="bl">LOADING WEED INTELLIGENCE DATABASE...</div>
-    <div class="bl">CALIBRATING THREAT ASSESSMENT PROTOCOLS...</div>
-    <div class="bl">WARNING: CRABGRASS DETECTED. INITIATING RESPONSE.</div>
+  <div style="width:280px;text-align:left">
+    <div class="bl">LAWN OPS v3.0 — CITRUS HEIGHTS CA 95621</div>
+    <div class="bl">LOADING WEATHER TELEMETRY + MISSION DATA...</div>
+    <div class="bl">WEED SUPPRESSION PROTOCOLS ACTIVE. LET'S GO.</div>
   </div>
-  <div class="bb"><div class="bb-fill"></div></div>
+  <div class="bbar"><div class="bfill"></div></div>
 </div>
 
-<div id="main">
+<div id="app">
 
+<!-- HEADER -->
 <header class="hdr">
-  <div class="hdr-logo">LAWN RESCUE</div>
-  <nav class="nav-links">
-    <a class="nav-link" href="#today">TODAY</a>
-    <a class="nav-link" href="#week">WEEK</a>
-    <a class="nav-link" href="#timeline">TIMELINE</a>
-    <a class="nav-link" href="#intel">WEED INTEL</a>
-    <a class="nav-link" href="#grass">GRASS</a>
-    <a class="nav-link" href="#checklist">CHECKLIST</a>
-    <a class="nav-link" href="#armory">ARMORY</a>
+  <div class="logo">LAWN OPS</div>
+  <nav class="nav">
+    <a href="#weather">WEATHER</a>
+    <a href="#status">STATUS</a>
+    <a href="#week">WEEK</a>
+    <a href="#timeline">CALENDAR</a>
+    <a href="#checklist">CHECKLIST</a>
+    <a href="#intel">WEED INTEL</a>
+    <a href="#armory">ARMORY</a>
+    <a href="#projects">PROJECTS</a>
   </nav>
-  <div id="clock">--:--:--</div>
+  <div id="clk">--:--:--</div>
 </header>
 
 <div class="wrap">
 
-<!-- HERO -->
-<div class="hero">
-  <div class="eyebrow">CITRUS HEIGHTS CA · ZONE 9B · OPERATION INITIATED: MARCH 2026</div>
-  <h1 class="title"><span class="dim">OPERATION</span><br><span class="acc">LAWN RESCUE</span></h1>
-  <p class="hero-sub">Your yard decided to go feral. We're fixing that.<br>One mission at a time.<span class="blink">_</span></p>
-  <div class="stats">
-    <div class="sc r">
-      <div class="sc-lbl">Weed Threat Level</div>
-      <div class="sc-val">CRITICAL</div>
-      <div class="gauge-r"><div class="gauge"><div class="gf r" style="width:88%"></div></div><div class="gpct">88%</div></div>
-      <div class="sc-sub">Pre-emergent window: OPEN</div>
+<!-- WEATHER -->
+<section id="weather" style="padding:28px 0 20px">
+  <div class="sh"><span class="sid">SEC-01</span><div><div class="stitle">WEATHER <span class="g">INTEL</span></div><div class="sdesc">// Live forecast via Open-Meteo · Citrus Heights CA · Updated on load</div></div></div>
+
+  <!-- Lawn weather alerts injected here -->
+  <div id="weatherAlerts"></div>
+
+  <div class="w-top">
+    <div class="w-current">
+      <div class="w-label">// Current conditions</div>
+      <div class="w-temp" id="wCurrTemp"><span style="opacity:.3">--</span><sup>°F</sup></div>
+      <div class="w-cond" id="wCurrCond">Loading...</div>
+      <div class="w-meta" id="wCurrMeta"></div>
+      <div class="w-alert" id="wLawnAlert"></div>
     </div>
-    <div class="sc a">
-      <div class="sc-lbl">Current Phase</div>
-      <div class="sc-val">PHASE 1</div>
-      <div class="gauge-r"><div class="gauge"><div class="gf a" style="width:15%"></div></div><div class="gpct">15%</div></div>
-      <div class="sc-sub">Weed elimination in progress</div>
-    </div>
-    <div class="sc g">
-      <div class="sc-lbl">Mission Start</div>
-      <div class="sc-val">TODAY</div>
-      <div class="gauge-r"><div class="gauge"><div class="gf g" style="width:100%"></div></div><div class="gpct">GO</div></div>
-      <div class="sc-sub">Wed, March 18 · Zone 9b</div>
-    </div>
-    <div class="sc g">
-      <div class="sc-lbl">Healthy Lawn ETA</div>
-      <div class="sc-val">~12 WKS</div>
-      <div class="gauge-r"><div class="gauge"><div class="gf g" style="width:8%"></div></div><div class="gpct">8%</div></div>
-      <div class="sc-sub">If you follow the plan. No skipping.</div>
+    <div class="w-hourly">
+      <div class="w-hourly-title">// Today — temperature through the day</div>
+      <div class="chart-wrap"><canvas id="hourlyCanvas"></canvas></div>
+      <div class="chart-times" id="chartTimes"></div>
     </div>
   </div>
-</div>
 
-<!-- TODAY -->
-<section class="sec" id="today">
-  <div class="sh"><span class="sid">SEC-01</span><div><div class="stitle">TODAY'S <span class="g">MISSION</span></div><div class="sdesc">// Wed March 18 · You just got home · Execute immediately</div></div></div>
-
-  <div class="brief">
-    <div class="btag">Active mission · Initiating now</div>
-    <div class="btitle">First Mow — Operation Ground Zero</div>
-    <ul class="objs">
-      <li class="obj"><span class="onum">01</span>Walk the entire yard. Remove rocks, sticks, dog toys — anything the mower blade turns into a weapon.</li>
-      <li class="obj"><span class="onum">02</span>Set mower deck to the HIGHEST setting. 4 to 4.5 inches. All the way up.</li>
-      <li class="obj"><span class="onum">03</span>Attach the bag. You are not mulching this. You are collecting evidence of what was living here.</li>
-      <li class="obj"><span class="onum">04</span>Mow in straight overlapping rows. If it bogs down and stalls, back up and take a narrower strip.</li>
-      <li class="obj"><span class="onum">05</span>Dump clippings in yard waste bin — not compost. Weed seeds are in there. Do not recycle them.</li>
-      <li class="obj"><span class="onum">06</span>Take a before photo. Front, back, every corner. You'll want this in September. Trust the process.</li>
-      <li class="obj"><span class="onum">07</span>Drink water. Go inside. You're done for today. Mission complete.</li>
-    </ul>
+  <div id="weekForecast" class="w-week">
+    <div class="w-loading" style="grid-column:1/-1">Acquiring forecast data<span class="blink">_</span></div>
   </div>
-
-  <div class="quip"><span>📡</span><span>Intel note: wait 2–3 days before any herbicide. Weeds need to regrow leaf surface for the spray to stick to. This is the only time in your life you'll be scientifically instructed to let weeds grow. Frame this moment.</span></div>
-  <div class="quip"><span>⏱️</span><span>Tomorrow (Thu 19): drive to Home Depot on Antelope Rd and acquire the supplies listed in the Armory section. That is the entire mission. Very achievable. You can do this.</span></div>
 </section>
 
-<!-- WEEK OPS -->
+<!-- CURRENT STATUS -->
+<section class="sec" id="status">
+  <div class="sh"><span class="sid">SEC-02</span><div><div class="stitle">MISSION <span class="g">STATUS</span></div><div class="sdesc">// What you've done · What's next · Current lawn phase</div></div></div>
+
+  <div id="overseedException" class="lawn-alert blue" style="margin-bottom:16px">
+    <span>🌱</span>
+    <span><strong>OVERSEEDING:</strong> Spring window is closed for you. You applied Weed &amp; Feed which contains herbicide — seeding within 6–8 weeks will kill the new grass. That puts you into late May/early June when Sacramento starts hitting 90°F+. <strong>September is the right call.</strong> Fall conditions (60–75°F soil) are ideal for tall fescue germination and you'll get much better results.</span>
+  </div>
+
+  <div class="status-grid">
+    <div class="status-card done"><div class="sc-label">First Mow</div><div class="sc-val">✓ DONE</div><div class="sc-sub">High deck, ground zero</div></div>
+    <div class="status-card done"><div class="sc-label">Scalp Mow</div><div class="sc-val">✓ DONE</div><div class="sc-sub">Cut down short</div></div>
+    <div class="status-card done"><div class="sc-label">Spike Aeration</div><div class="sc-val">✓ DONE</div><div class="sc-sub">Not plug, but it counts</div></div>
+    <div class="status-card done"><div class="sc-label">Weed &amp; Feed</div><div class="sc-val">✓ DONE</div><div class="sc-sub">Applied — working now</div></div>
+    <div class="status-card pending"><div class="sc-label">Weed &amp; Feed</div><div class="sc-val">WAIT 4 WKS</div><div class="sc-sub">Let it fully work</div></div>
+    <div class="status-card pending"><div class="sc-label">Current Phase</div><div class="sc-val">MAINTAIN</div><div class="sc-sub">Mow Sat, water, watch</div></div>
+    <div class="status-card future"><div class="sc-label">Overseed</div><div class="sc-val">SEPTEMBER</div><div class="sc-sub">After plug aerate</div></div>
+    <div class="status-card future"><div class="sc-label">Plug Aerate</div><div class="sc-val">SEPTEMBER</div><div class="sc-sub">Before overseeding</div></div>
+  </div>
+
+  <div class="quip"><span>📡</span><span>Spike aeration loosens the top layer — better than nothing and it helped the weed &amp; feed penetrate. But it doesn't pull cores out. When September comes, rent the plug aerator — it physically removes soil plugs and is dramatically better for clay soil. The difference is real.</span></div>
+</section>
+
+<!-- WEEKLY OPS -->
 <section class="sec" id="week">
-  <div class="sh"><span class="sid">SEC-02</span><div><div class="stitle">WEEKLY <span class="g">OPS</span></div><div class="sdesc">// One week at a time · Saturday = mow day · Focus only on what's current</div></div></div>
+  <div class="sh"><span class="sid">SEC-03</span><div><div class="stitle">WEEKLY <span class="g">OPS</span></div><div class="sdesc">// Saturday = mow day · Water twice a week · Wednesday weed patrol</div></div></div>
 
   <div class="wtabs">
-    <button class="wtab on" onclick="sw(1,this)">WK-01</button>
-    <button class="wtab" onclick="sw(2,this)">WK-02</button>
-    <button class="wtab" onclick="sw(3,this)">WK-03</button>
-    <button class="wtab" onclick="sw(4,this)">WK-04</button>
-    <button class="wtab" onclick="sw(5,this)">MO-02</button>
-    <button class="wtab" onclick="sw(6,this)">SUMMER</button>
-    <button class="wtab" onclick="sw(7,this)">FALL</button>
+    <button class="wtab on" onclick="sw(1,this)">THIS WEEK</button>
+    <button class="wtab" onclick="sw(2,this)">NEXT WEEK</button>
+    <button class="wtab" onclick="sw(3,this)">LATE APRIL</button>
+    <button class="wtab" onclick="sw(4,this)">MAY–AUG</button>
+    <button class="wtab" onclick="sw(5,this)">SEPT FALL</button>
+    <button class="wtab" onclick="sw(6,this)">OCT–JAN</button>
   </div>
 
+  <!-- THIS WEEK - Apr 7-13 -->
   <div class="wpanel show" id="wp1">
-    <div class="wbar"><span class="wcn">WK-01</span><span class="wmis">// FIRST STRIKE — The eviction begins.</span><span class="wrange">Mar 16–22</span></div>
+    <div class="wbar"><span class="wcn">THIS WEEK</span><span class="wmis">// Weed &amp; Feed is doing its thing. Stay out of the way.</span><span class="wrange">Apr 7–13</span></div>
     <div class="dgrid">
-      <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span><span class="dnum">16</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">Nothing. Storm is coming.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Tue</span><span class="dnum">17</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">Still nothing. Coiled spring energy.</div></div></div>
-      <div class="dc today"><div class="dhdr"><span class="dname">Wed</span><span class="dnum">18</span><span class="nowpip">NOW</span></div><div class="task"><div class="td mow"></div><div class="tt">First Mow</div><div class="tn">Max deck height. Bag everything. Before photos.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Thu</span><span class="dnum">19</span></div><div class="task"><div class="td buy"></div><div class="tt">Buy Supplies</div><div class="tn">Home Depot Antelope Rd. See Armory.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Fri</span><span class="dnum">20</span></div><div class="task"><div class="td pre"></div><div class="tt">Pre-emergent</div><div class="tn">Spread granular. Water in within 24hrs.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Sat</span><span class="dnum">21</span></div><div class="task"><div class="td post"></div><div class="tt">Spray Weeds</div><div class="tn">Post-emergent on all visible weeds. Under 85°F.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span><span class="dnum">22</span></div><div class="task"><div class="td beds"></div><div class="tt">Beds & Borders</div><div class="tn">Hand-pull beds. Or rest. You've earned it.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span><span class="dnum">7</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">Weed &amp; Feed is working. Don't disturb it.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Tue</span><span class="dnum">8</span></div><div class="task"><div class="td water"></div><div class="tt">Water</div><div class="tn">Deep session 1. Morning only. 30–40 min.</div></div></div>
+      <div class="dc today"><div class="dhdr"><span class="dname">Wed</span><span class="dnum">9</span><span class="nowpip">NOW</span></div><div class="task"><div class="td inspect"></div><div class="tt">Weed Patrol</div><div class="tn">10 min walk. Note what's dying. Note what isn't.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Thu</span><span class="dnum">10</span></div><div class="task"><div class="td rest"></div><div class="tn">Rain in forecast (75%). Let nature water it.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Fri</span><span class="dnum">11</span></div><div class="task"><div class="td rest"></div><div class="tn">Rain likely (75%). Day off.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Sat</span><span class="dnum">12</span></div>
+        <div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Early! 2.5–3 in deck. Check forecast — 75% rain.</div></div>
+        <div class="task"><div class="td beds"></div><div class="tt">Edge</div><div class="tn">Sidewalks &amp; driveway while you're out there.</div></div>
+      </div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span><span class="dnum">13</span></div><div class="task"><div class="td rest"></div><div class="tt">Rest</div><div class="tn">Lawn's doing its thing. So can you.</div></div></div>
     </div>
-    <div class="wfoot">🎯 Goal: pre-emergent down, first mow done, weeds dying. Three things. That's the whole week.</div>
+    <div class="wfoot">⚠️ Rain forecast Fri–Sat (75%). Check the weather section above before mowing Saturday — wet grass clumps and spreads fungal spores. If it's soaked, push to Sunday morning.</div>
   </div>
 
+  <!-- NEXT WEEK - Apr 14-20 -->
   <div class="wpanel" id="wp2">
-    <div class="wbar"><span class="wcn">WK-02</span><span class="wmis">// LOWER & TIGHTEN — Drop the deck. Hit survivors. Mulch the beds.</span><span class="wrange">Mar 23–29</span></div>
+    <div class="wbar"><span class="wcn">NEXT WEEK</span><span class="wmis">// Routine settles in. Mow, water, inspect.</span><span class="wrange">Apr 14–20</span></div>
     <div class="dgrid">
-      <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span><span class="dnum">23</span></div><div class="task"><div class="td rest"></div><div class="tt">Rest</div><div class="tn">Herbicide is working. Leave it alone.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Tue</span><span class="dnum">24</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Wed</span><span class="dnum">25</span></div><div class="task"><div class="td post"></div><div class="tt">Spray Survivors</div><div class="tn">Some weeds are stubborn. So are you.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Thu</span><span class="dnum">26</span></div><div class="task"><div class="td rest"></div><div class="tt">Rest</div><div class="tn">No mowing 2–3 days post-spray. Patience.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Fri</span><span class="dnum">27</span></div><div class="task"><div class="td beds"></div><div class="tt">Mulch Beds</div><div class="tn">3 inches wood chip mulch in all beds.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Sat</span><span class="dnum">28</span></div><div class="task"><div class="td mow"></div><div class="tt">2nd Mow 🌅</div><div class="tn">Early morning. One notch lower. Still bagging.</div></div><div class="task"><div class="td beds"></div><div class="tt">Install Edging</div><div class="tn">Between lawn and beds. The pro detail.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span><span class="dnum">29</span></div><div class="task"><div class="td rest"></div><div class="tt">Progress Photo</div><div class="tn">Compare to Week 1. Post it. Accept compliments.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span><span class="dnum">14</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Tue</span><span class="dnum">15</span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 1. Early morning. Deep and slow.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Wed</span><span class="dnum">16</span></div><div class="task"><div class="td inspect"></div><div class="tt">Weed Patrol</div><div class="tn">Pull any survivors by hand. 10 min max.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Thu</span><span class="dnum">17</span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 2. 1 inch total for the week.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Fri</span><span class="dnum">18</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">It's Friday. The lawn is fine.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Sat</span><span class="dnum">19</span></div>
+        <div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Before 10am. 2.5–3 in. Bag or mulch now — weeds dying.</div></div>
+        <div class="task"><div class="td beds"></div><div class="tt">Edge &amp; Tidy</div><div class="tn">Fence lines, driveway. Details make it look pro.</div></div>
+      </div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span><span class="dnum">20</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
     </div>
-    <div class="wfoot">🎯 Goal: beds mulched, edging in, weeds on the run. Starting to look intentional instead of abandoned.</div>
+    <div class="wfoot">🎯 Routine locked: Mow Sat morning, water Tue &amp; Thu, weed patrol Wed. ~90 min total per week. This is the whole maintenance schedule.</div>
   </div>
 
+  <!-- LATE APRIL -->
   <div class="wpanel" id="wp3">
-    <div class="wbar"><span class="wcn">WK-03</span><span class="wmis">// FIND YOUR HEIGHT — Dial in to 3 inches. Fertilize. Assess the battlefield.</span><span class="wrange">Mar 30–Apr 5</span></div>
+    <div class="wbar"><span class="wcn">LATE APRIL</span><span class="wmis">// Weed &amp; Feed fully done. Assess results. Possible second application.</span><span class="wrange">Apr 21 – May 4</span></div>
     <div class="dgrid">
       <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Tue</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Wed</span></div><div class="task"><div class="td post"></div><div class="tt">Spot Spray</div><div class="tn">Any survivors get another round. No negotiations.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Thu</span></div><div class="task"><div class="td water"></div><div class="tt">Deep Water</div><div class="tn">1 inch this week. 2 sessions. Morning only.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Fri</span></div><div class="task"><div class="td feed"></div><div class="tt">Light Fertilize</div><div class="tn">Balanced feed if grass is actively growing.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Sat</span></div><div class="task"><div class="td mow"></div><div class="tt">3rd Mow 🌅</div><div class="tn">Early! Lower to 3 inches. Dialing in the height.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span></div><div class="task"><div class="td rest"></div><div class="tt">Assess Patches</div><div class="tn">Mark bare spots. Overseeded in September.</div></div></div>
-    </div>
-    <div class="wfoot">🎯 Goal: at target mow height, fertilizer down, bare spots identified. You're in maintenance mode now.</div>
-  </div>
-
-  <div class="wpanel" id="wp4">
-    <div class="wbar"><span class="wcn">WK-04</span><span class="wmis">// ROUTINE LOCK-IN — Saturday mornings are mow mornings now. This is your life.</span><span class="wrange">Apr 6–12</span></div>
-    <div class="dgrid">
-      <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Tue</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Wed</span></div><div class="task"><div class="td beds"></div><div class="tt">Weed Patrol</div><div class="tn">10 min walk. Pull stragglers. Prevention > cure.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Thu</span></div><div class="task"><div class="td water"></div><div class="tt">Water</div><div class="tn">Mid-week session. Deep beats frequent. Always.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Fri</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">It's Friday. Lawn's fine. Go live your life.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Sat</span></div><div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Early morning. 2.5–3 inch deck. Every week.</div></div><div class="task"><div class="td beds"></div><div class="tt">Edge & Tidy</div><div class="tn">Sidewalks, driveway, fence lines. Details matter.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span></div><div class="task"><div class="td rest"></div><div class="tt">Month 1 Done</div><div class="tn">Sit outside and enjoy it. You did that.</div></div></div>
-    </div>
-    <div class="wfoot">🎯 Goal: locked-in routine. Mow Sat, weed patrol Wed, water twice. ~2 hours total per week. That's the maintenance schedule. Done.</div>
-  </div>
-
-  <div class="wpanel" id="wp5">
-    <div class="wbar"><span class="wcn">MO-02</span><span class="wmis">// SOIL HEALTH — Underground work that pays off in fall. You won't see it now. Trust it.</span><span class="wrange">April–May</span></div>
-    <div class="dgrid">
-      <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Tue</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Wed</span></div><div class="task"><div class="td feed"></div><div class="tt">Core Aerate</div><div class="tn">Rent ~$80/day Home Depot. Clay soil transformation.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Thu</span></div><div class="task"><div class="td rest"></div><div class="tt">Recovery</div><div class="tn">The aerator is no joke. Stretch. You'll feel it.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Fri</span></div><div class="task"><div class="td beds"></div><div class="tt">Spread Compost</div><div class="tn">1–2 inches over bare areas. Rake into aeration holes.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Sat</span></div><div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Saturday routine continues. Early morning.</div></div><div class="task"><div class="td water"></div><div class="tt">Deep Water</div><div class="tn">Activate the compost. Soil is drinking it up.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Tue</span></div><div class="task"><div class="td water"></div><div class="tt">Water</div><div class="tn">Deep session. Morning.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Wed</span></div><div class="task"><div class="td inspect"></div><div class="tt">Assess Results</div><div class="tn">4 weeks post W&amp;F. What's dead? What survived?</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Thu</span></div><div class="task"><div class="td water"></div><div class="tt">Water</div><div class="tn">Session 2.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Fri</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Sat</span></div>
+        <div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Before 10am. Start raising deck toward 3.5 in — heat is coming.</div></div>
+        <div class="task"><div class="td inspect"></div><div class="tt">2nd W&amp;F?</div><div class="tn">Only if persistent weeds remain. Spot spray is fine too.</div></div>
+      </div>
       <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
     </div>
-    <div class="wfoot">🎯 Goal: aerated and amended soil. Results appear in September. This is infrastructure work, not instant gratification.</div>
+    <div class="wfoot">📊 Assess the weed &amp; feed results after ~4 weeks. If 70%+ of weeds are dead or gone — you're winning. Stubborn survivors get spot-sprayed with post-emergent. Don't second-guess the process.</div>
   </div>
 
-  <div class="wpanel" id="wp6">
-    <div class="wbar"><span class="wcn">SUMMER</span><span class="wmis">// SURVIVE — Mow high. Water deep. Do not go outside after 10am. Non-negotiable.</span><span class="wrange">June–Aug</span></div>
+  <!-- MAY - AUG SUMMER -->
+  <div class="wpanel" id="wp4">
+    <div class="wbar"><span class="wcn">MAY–AUG</span><span class="wmis">// Summer survival mode. Mow high. Water deep. Stay cool.</span><span class="wrange">May–August</span></div>
     <div class="dgrid">
       <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Tue</span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 1/3. 0.5 in. Morning only. Always morning.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Wed</span></div><div class="task"><div class="td rest"></div><div class="tt">Off Day</div><div class="tn">It's hot. Stay inside. No drama.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Thu</span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 2/3. Do not water in the afternoon. Ever.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Tue</span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">0.5 in. Session 1/3. Morning only — always.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Wed</span></div><div class="task"><div class="td rest"></div><div class="tt">Off</div><div class="tn">It's hot. Stay inside. Lawn is fine.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Thu</span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 2/3. Never afternoon — you're boiling the roots.</div></div></div>
       <div class="dc rest"><div class="dhdr"><span class="dname">Fri</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Sat</span></div><div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Before 10am. Deck at 3.5 in. Taller = better.</div></div><div class="task"><div class="td beds"></div><div class="tt">Pest Patrol</div><div class="tn">Brown patches may be chinch bugs or grubs. Check early.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Sun</span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 3/3. Hit your 1.5 inches for the week.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Sat</span></div>
+        <div class="task"><div class="td mow"></div><div class="tt">Mow 🌅</div><div class="tn">Before 10am hard stop. Deck 3.5 in. Taller = cooler soil.</div></div>
+        <div class="task"><div class="td inspect"></div><div class="tt">Pest Check</div><div class="tn">Brown patches = chinch bugs or grubs. Catch early.</div></div>
+      </div>
+      <div class="dc"><div class="dhdr"><span class="dname">Sun</span></div><div class="task"><div class="td water"></div><div class="tt">Water Deep</div><div class="tn">Session 3/3. Hit 1.5 in for the week total.</div></div></div>
     </div>
-    <div class="wfoot">☀️ Summer mantra: mow high, water deep, stay cool. No fescue fertilizing. No aerating dry soil. Repeat until October.</div>
+    <div class="wfoot">☀️ Summer rules: mow high (3.5"), water deep (1.5"/wk in 3 sessions), before 10am always, no fertilizer on fescue, no aerating dry soil. Repeat until September.</div>
   </div>
 
-  <div class="wpanel" id="wp7">
-    <div class="wbar"><span class="wcn">FALL</span><span class="wmis">// THE BIG PAYOFF — Everything from spring was warmup. This is the main event.</span><span class="wrange">Sept–Oct</span></div>
+  <!-- SEPT FALL -->
+  <div class="wpanel" id="wp5">
+    <div class="wbar"><span class="wcn">SEPT FALL</span><span class="wmis">// The big payoff week. Everything you did in spring was warmup for this.</span><span class="wrange">September</span></div>
     <div class="dgrid">
       <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Tue</span></div><div class="task"><div class="td feed"></div><div class="tt">Core Aerate</div><div class="tn">Annual. Every year. No exceptions. Clay needs it.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Wed</span></div><div class="task"><div class="td feed"></div><div class="tt">Overseed</div><div class="tn">Tall fescue over thin spots right after aerating.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Thu</span></div><div class="task"><div class="td feed"></div><div class="tt">Fall Fertilize</div><div class="tn">Most important fertilizer of the year. High N.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Tue</span></div><div class="task"><div class="td aerate"></div><div class="tt">Plug Aerate</div><div class="tn">Rent the PLUG aerator this time. Annual must.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Wed</span></div><div class="task"><div class="td seed"></div><div class="tt">Overseed</div><div class="tn">Tall fescue over thin spots right after aerating.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Thu</span></div><div class="task"><div class="td feed"></div><div class="tt">Fall Fertilize</div><div class="tn">High N slow-release. Most important feed of the year.</div></div></div>
       <div class="dc rest"><div class="dhdr"><span class="dname">Fri</span></div><div class="task"><div class="td water"></div><div class="tt">Daily Water</div><div class="tn">New seed needs moisture until 2 inches tall.</div></div></div>
-      <div class="dc"><div class="dhdr"><span class="dname">Sat</span></div><div class="task"><div class="td mow"></div><div class="tt">Mow Short 🌅</div><div class="tn">Drop to 2 in before aerating. Early morning.</div></div><div class="task"><div class="td pre"></div><div class="tt">Fall Pre-emergent</div><div class="tn">ONLY if not overseeding. Blocks winter weeds.</div></div></div>
-      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span></div><div class="task"><div class="td rest"></div><div class="tt">After Photo</div><div class="tn">Compare to March. Post it. You've earned it.</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Sat</span></div>
+        <div class="task"><div class="td mow"></div><div class="tt">Mow Short 🌅</div><div class="tn">Drop to 2 in before aerating. Gives seed soil contact.</div></div>
+        <div class="task"><div class="td inspect"></div><div class="tt">Fall Pre-em</div><div class="tn">ONLY if not overseeding. Blocks winter weeds.</div></div>
+      </div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span></div><div class="task"><div class="td rest"></div><div class="tt">After Photo</div><div class="tn">Compare to April. Post it. You earned every compliment.</div></div></div>
     </div>
-    <div class="wfoot">🍂 Fall is where you see the return on everything you put in during spring. The lawn by October is why you didn't skip the plan.</div>
+    <div class="wfoot">🍂 September is the most important month of the lawn year. This week alone does more for your lawn's long-term health than everything else combined.</div>
+  </div>
+
+  <!-- OCT - JAN -->
+  <div class="wpanel" id="wp6">
+    <div class="wbar"><span class="wcn">OCT–JAN</span><span class="wmis">// Wind down. Winterize. Rest. Prepare for next year.</span><span class="wrange">Oct–January</span></div>
+    <div class="dgrid">
+      <div class="dc rest"><div class="dhdr"><span class="dname">Mon</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Tue</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Wed</span></div><div class="task"><div class="td inspect"></div><div class="tt">Winter Weeds</div><div class="tn">Spot treat chickweed &amp; poa annua as they appear.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Thu</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">Watering reduces as rains arrive.</div></div></div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Fri</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
+      <div class="dc"><div class="dhdr"><span class="dname">Sat</span></div>
+        <div class="task"><div class="td mow"></div><div class="tt">Mow (as needed)</div><div class="tn">Every 2–3 weeks or when it looks shaggy.</div></div>
+        <div class="task"><div class="td feed"></div><div class="tt">Winterizer (Oct)</div><div class="tn">High K fertilizer in October. Then done for the year.</div></div>
+      </div>
+      <div class="dc rest"><div class="dhdr"><span class="dname">Sun</span></div><div class="task"><div class="td rest"></div><div class="tt">—</div><div class="tn">—</div></div></div>
+    </div>
+    <div class="wfoot">❄️ December/January: sharpen mower blade, do a soil test, order spring pre-emergent. Then enjoy not mowing every week.</div>
   </div>
 
   <div class="wleg">
     <div class="leg"><div class="ld" style="background:var(--green)"></div>Mow</div>
-    <div class="leg"><div class="ld" style="background:var(--cyan)"></div>Pre-emergent</div>
-    <div class="leg"><div class="ld" style="background:var(--amber)"></div>Post-emergent</div>
-    <div class="leg"><div class="ld" style="background:#d4a800"></div>Feed/Fertilize</div>
-    <div class="leg"><div class="ld" style="background:#a0785a"></div>Beds</div>
-    <div class="leg"><div class="ld" style="background:var(--red)"></div>Buy Supplies</div>
-    <div class="leg"><div class="ld" style="background:#4488ff"></div>Water</div>
+    <div class="leg"><div class="ld" style="background:var(--blue)"></div>Water</div>
+    <div class="leg"><div class="ld" style="background:var(--amber)"></div>Inspect/Patrol</div>
+    <div class="leg"><div class="ld" style="background:#d4a800"></div>Fertilize</div>
+    <div class="leg"><div class="ld" style="background:#9a6840"></div>Beds/Edge</div>
+    <div class="leg"><div class="ld" style="background:var(--cyan)"></div>Aerate</div>
+    <div class="leg"><div class="ld" style="background:#88cc44"></div>Overseed</div>
     <div class="leg"><div class="ld" style="background:var(--border2)"></div>Rest</div>
   </div>
 </section>
 
-<!-- TIMELINE -->
+<!-- CALENDAR -->
 <section class="sec" id="timeline">
-  <div class="sh"><span class="sid">SEC-03</span><div><div class="stitle">ANNUAL <span class="g">CALENDAR</span></div><div class="sdesc">// The full year at a glance · Active month is glowing</div></div></div>
-  <div class="radar"></div>
+  <div class="sh"><span class="sid">SEC-04</span><div><div class="stitle">ANNUAL <span class="g">CALENDAR</span></div><div class="sdesc">// Full year view · Green = active month · Faded = completed</div></div></div>
   <div class="calgrid">
-    <div class="calm now"><div class="calmh">March<div class="adot"></div></div><div class="calts"><div class="calt">First mow (high deck)</div><div class="calt">Spring pre-emergent NOW</div><div class="calt">Post-emergent spraying</div><div class="calt">Bed mulch & edging</div></div></div>
-    <div class="calm"><div class="calmh">April</div><div class="calts"><div class="calt">Regular Sat mows</div><div class="calt">Core aerate if needed</div><div class="calt">Compost bare areas</div><div class="calt">Light spring fertilizer</div></div></div>
-    <div class="calm"><div class="calmh">May</div><div class="calts"><div class="calt">Raise deck to 3.5"</div><div class="calt">Deep infrequent water</div><div class="calt">Sharpen mower blade</div><div class="calt">Last patch-seed chance</div></div></div>
-    <div class="calm"><div class="calmh">June</div><div class="calts"><div class="calt">Before 10am — always</div><div class="calt">1.5 in water/week</div><div class="calt">Skip fescue fertilizer</div><div class="calt">Watch for pests</div></div></div>
-    <div class="calm"><div class="calmh">Jul–Aug</div><div class="calts"><div class="calt">Survive. Stay hydrated.</div><div class="calt">3.5 inch mow height</div><div class="calt">No aerating dry soil</div><div class="calt">Prep for fall pre-em</div></div></div>
-    <div class="calm"><div class="calmh">Sept ⭐</div><div class="calts"><div class="calt">Core aerate (annual)</div><div class="calt">Overseed thin spots</div><div class="calt">Main fall fertilizer</div><div class="calt">Fall pre-emergent</div></div></div>
-    <div class="calm"><div class="calmh">Oct–Nov</div><div class="calts"><div class="calt">Winterizer fertilizer</div><div class="calt">Reduce watering</div><div class="calt">Mow until it stops</div><div class="calt">Bermuda: overseed rye</div></div></div>
-    <div class="calm"><div class="calmh">Dec–Jan</div><div class="calts"><div class="calt">Spot-treat winter weeds</div><div class="calt">Sharpen mower blade</div><div class="calt">Optional soil test</div><div class="calt">Enjoy the lawn. You did it.</div></div></div>
-  </div>
-</section>
-
-<!-- WEED INTEL -->
-<section class="sec" id="intel">
-  <div class="sh"><span class="sid">SEC-04</span><div><div class="stitle">WEED <span class="g">INTEL</span></div><div class="sdesc">// Know your enemy · Pre-emergent prevents · Post-emergent eliminates</div></div></div>
-
-  <div class="quip" style="margin-bottom:22px"><span>📡</span><span>Pre-emergent = the bouncer. Stops weed seeds at the door before they germinate. Post-emergent = the guy who throws out the ones who already snuck in. You need both. Non-negotiable.</span></div>
-
-  <div style="overflow-x:auto;margin-bottom:24px;border:1px solid var(--border2);border-radius:5px">
-    <table class="htbl">
-      <thead><tr><th>Type</th><th>What it does</th><th>When to apply</th><th>Products</th><th>Critical note</th></tr></thead>
-      <tbody>
-        <tr><td>Pre-emergent 🛡️</td><td>Soil barrier stops seeds germinating</td><td>Feb–Mar (55°F) & Aug–Sep (below 70°F)</td><td>Prodiamine, Scotts Halts, Dithiopyr</td><td>KILLS GRASS SEED TOO. No seeding within 6–8 weeks.</td></tr>
-        <tr><td>Post-emergent selective 🎯</td><td>Kills specific weeds, not grass</td><td>When weeds visible. Wait 2–3 days after mowing.</td><td>Ortho Weed B Gon, Spectracide Weed Stop</td><td>Under 85°F. No rain in 24hrs. Calm winds only.</td></tr>
-        <tr><td>Non-selective ☢️</td><td>Kills EVERYTHING</td><td>Beds, paths, borders only. Not on lawn.</td><td>Roundup, generic glyphosate</td><td>Wait 2 weeks before replanting. Seriously.</td></tr>
-        <tr><td>Weed & Feed 💊</td><td>Post-emergent + fertilizer combo</td><td>Spring or fall when weeds actively growing</td><td>Scotts Turf Builder W+F</td><td>3–4 weeks gap from pre-emergent application.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="wgrid">
-    <div class="wcard"><div class="whdr"><span class="wname">Crabgrass</span><span class="ttag hi">HIGH</span></div><div class="wbody">Annual summer weed. Germinates at 55°F. Dense and spreading. Nearly impossible to kill once established. The crabgrass does not negotiate.<div class="wtac">Pre-emergent Feb–Mar. Do not miss the window.</div></div></div>
-    <div class="wcard"><div class="whdr"><span class="wname">Dandelion</span><span class="ttag md">MED</span></div><div class="wbody">Deep taproot. Regrows from root fragments. Spreads by parachute. Looks cheerful. Is not your friend.<div class="wtac">Broadleaf post-emergent anytime visible.</div></div></div>
-    <div class="wcard"><div class="whdr"><span class="wname">Oxalis / Clover</span><span class="ttag hi">HIGH</span></div><div class="wbody">Spreads aggressively. Very common in Sacramento clay. Multiple treatments required. Will outlast your patience if you let it.<div class="wtac">Selective broadleaf. Expect 2–3 treatments.</div></div></div>
-    <div class="wcard"><div class="whdr"><span class="wname">Chickweed / Filaree</span><span class="ttag md">MED</span></div><div class="wbody">Winter annuals. Germinate in fall, appear in spring. Block with fall pre-emergent in August. Stop them before they exist.<div class="wtac">Fall pre-emergent Aug–Sep is the key move.</div></div></div>
-    <div class="wcard"><div class="whdr"><span class="wname">Bindweed</span><span class="ttag hi">HIGH</span></div><div class="wbody">The nightmare. Deep roots. Vines everything. Has survived dinosaurs, probably. Requires months of glyphosate persistence.<div class="wtac">Glyphosate on vines in beds only. Persistence required.</div></div></div>
-    <div class="wcard"><div class="whdr"><span class="wname">Spurge</span><span class="ttag lo">LOW</span></div><div class="wbody">Low-growing summer annual. Loves hot dry soil — practically built for Citrus Heights summers. Spring pre-emergent handles it well.<div class="wtac">Spring pre-emergent is sufficient.</div></div></div>
-  </div>
-</section>
-
-<!-- GRASS DATABASE -->
-<section class="sec" id="grass">
-  <div class="sh"><span class="sid">SEC-05</span><div><div class="stitle">GRASS <span class="g">DATABASE</span></div><div class="sdesc">// Zone 9b · Hot dry summers · Clay soil · Choose your fighter</div></div></div>
-  <div class="ggrid">
-    <div class="gc rec">
-      <div class="gch"><div><div class="gcn">Tall Fescue</div><div class="gct">Most popular Sacramento lawn</div></div><span class="rpip">REC</span></div>
-      <div class="gcb">
-        <div class="gst"><span class="l">Mow height</span><span class="v">2.5–3.5"</span></div>
-        <div class="gst"><span class="l">Water/wk</span><span class="v">1–1.5"</span></div>
-        <div class="gst"><span class="l">Drought</span><span class="v"><div class="dots"><div class="d on"></div><div class="d on"></div><div class="d on"></div><div class="d on"></div><div class="d"></div></div></span></div>
-        <div class="gst"><span class="l">Shade</span><span class="v"><div class="dots"><div class="d on"></div><div class="d on"></div><div class="d on"></div><div class="d"></div><div class="d"></div></div></span></div>
-        <div class="gst"><span class="l">Winter</span><span class="v">✓ Stays green</span></div>
-        <div class="gst"><span class="l">Self-repair</span><span class="v">✗ Needs overseed</span></div>
-        <div class="gst"><span class="l">Plant</span><span class="v">Sept–Oct</span></div>
-      </div>
-    </div>
-    <div class="gc">
-      <div class="gch"><div><div class="gcn">Bermudagrass</div><div class="gct">Full sun + high traffic</div></div></div>
-      <div class="gcb">
-        <div class="gst"><span class="l">Mow height</span><span class="v">1–2"</span></div>
-        <div class="gst"><span class="l">Water/wk</span><span class="v">1"</span></div>
-        <div class="gst"><span class="l">Drought</span><span class="v"><div class="dots"><div class="d on"></div><div class="d on"></div><div class="d on"></div><div class="d on"></div><div class="d on"></div></div></span></div>
-        <div class="gst"><span class="l">Shade</span><span class="v"><div class="dots"><div class="d on"></div><div class="d"></div><div class="d"></div><div class="d"></div><div class="d"></div></div></span></div>
-        <div class="gst"><span class="l">Winter</span><span class="v">✗ Goes brown</span></div>
-        <div class="gst"><span class="l">Self-repair</span><span class="v">✓ Spreads</span></div>
-        <div class="gst"><span class="l">Plant</span><span class="v">Late Apr–Jun</span></div>
-      </div>
-    </div>
-    <div class="gc">
-      <div class="gch"><div><div class="gcn">UC Verde Buffalo</div><div class="gct">Lowest water use</div></div></div>
-      <div class="gcb">
-        <div class="gst"><span class="l">Mow height</span><span class="v">2–4" or skip</span></div>
-        <div class="gst"><span class="l">Water/wk</span><span class="v">0.25–0.5"</span></div>
-        <div class="gst"><span class="l">Drought</span><span class="v"><div class="dots"><div class="d on"></div><div class="d on"></div><div class="d on"></div><div class="d on"></div><div class="d on"></div></div></span></div>
-        <div class="gst"><span class="l">Shade</span><span class="v"><div class="dots"><div class="d on"></div><div class="d"></div><div class="d"></div><div class="d"></div><div class="d"></div></div></span></div>
-        <div class="gst"><span class="l">Winter</span><span class="v">✗ Brown/dormant</span></div>
-        <div class="gst"><span class="l">Self-repair</span><span class="v">✓ Fills in slowly</span></div>
-        <div class="gst"><span class="l">Plant</span><span class="v">Spring (plugs)</span></div>
-      </div>
-    </div>
-    <div class="gc">
-      <div class="gch"><div><div class="gcn">Fescue/Bluegrass</div><div class="gct">Premium lush look</div></div></div>
-      <div class="gcb">
-        <div class="gst"><span class="l">Mow height</span><span class="v">2.5–3.5"</span></div>
-        <div class="gst"><span class="l">Water/wk</span><span class="v">1.25–1.75"</span></div>
-        <div class="gst"><span class="l">Drought</span><span class="v"><div class="dots"><div class="d on"></div><div class="d on"></div><div class="d on"></div><div class="d"></div><div class="d"></div></div></span></div>
-        <div class="gst"><span class="l">Shade</span><span class="v"><div class="dots"><div class="d on"></div><div class="d on"></div><div class="d on"></div><div class="d"></div><div class="d"></div></div></span></div>
-        <div class="gst"><span class="l">Winter</span><span class="v">✓ Stays green</span></div>
-        <div class="gst"><span class="l">Self-repair</span><span class="v">✓ Bluegrass fills</span></div>
-        <div class="gst"><span class="l">Plant</span><span class="v">Sept–Oct</span></div>
-      </div>
-    </div>
+    <div class="calm done"><div class="calmh">Jan–Mar<div class="cdot-done"></div></div><div class="calts"><div class="calt">First mow done</div><div class="calt">Spike aerated</div><div class="calt">Weed &amp; Feed applied</div></div></div>
+    <div class="calm now"><div class="calmh">April<div class="adot"></div></div><div class="calts"><div class="calt">Saturday mows</div><div class="calt">Water Tue &amp; Thu</div><div class="calt">Wed weed patrol</div><div class="calt">W&amp;F working</div></div></div>
+    <div class="calm"><div class="calmh">May</div><div class="calts"><div class="calt">Raise deck to 3.5"</div><div class="calt">Assess W&amp;F results</div><div class="calt">Sharpen blade</div><div class="calt">Spot spray stragglers</div></div></div>
+    <div class="calm"><div class="calmh">June</div><div class="calts"><div class="calt">Before 10am only</div><div class="calt">1.5 in/week water</div><div class="calt">Skip fescue feed</div><div class="calt">Watch for pests</div></div></div>
+    <div class="calm"><div class="calmh">Jul–Aug</div><div class="calts"><div class="calt">Survive. Hydrate.</div><div class="calt">3.5" deck all summer</div><div class="calt">No aeration</div><div class="calt">Prep fall supplies</div></div></div>
+    <div class="calm"><div class="calmh">Sept ⭐</div><div class="calts"><div class="calt">PLUG aerate</div><div class="calt">Overseed fescue</div><div class="calt">Fall fertilizer</div><div class="calt">Fall pre-emergent</div></div></div>
+    <div class="calm"><div class="calmh">Oct–Nov</div><div class="calts"><div class="calt">Winterizer feed</div><div class="calt">Reduce watering</div><div class="calt">Mow until it stops</div><div class="calt">Spot winter weeds</div></div></div>
+    <div class="calm"><div class="calmh">Dec–Jan</div><div class="calts"><div class="calt">Sharpen blade</div><div class="calt">Soil test (optional)</div><div class="calt">Order spring supplies</div><div class="calt">Enjoy the lawn.</div></div></div>
   </div>
 </section>
 
 <!-- CHECKLIST -->
 <section class="sec" id="checklist">
-  <div class="sh"><span class="sid">SEC-06</span><div><div class="stitle">MISSION <span class="g">CHECKLIST</span></div><div class="sdesc">// Click to mark complete · Progress saves in your browser · No backsliding</div></div></div>
+  <div class="sh"><span class="sid">SEC-05</span><div><div class="stitle">MISSION <span class="g">CHECKLIST</span></div><div class="sdesc">// Click to mark done · Saves in your browser · Pre-loaded with what you've already completed</div></div></div>
 
-  <div class="pwrap">
-    <div class="ptop"><span class="plbl">// Overall mission progress</span><span class="ppct" id="ppct">0%</span></div>
-    <div class="pbar"><div class="pf" id="pfill" style="width:0%"></div></div>
+  <div class="ptop"><span class="plbl">// Overall mission progress</span><span class="ppct" id="ppct">0%</span></div>
+  <div class="pbar"><div class="pf" id="pfill" style="width:0%"></div></div>
+
+  <div class="clg">
+    <div class="clgh">Already done — great work</div>
+    <div class="cli done" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">First mow — high deck, cleared the overgrowth</div><div class="cls">Ground zero established.</div></div><span class="cbadge b-done">Done</span></div>
+    <div class="cli done" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Scalp mow — cut down short</div><div class="cls">Removed thatch, exposed the soil, reset the height.</div></div><span class="cbadge b-done">Done</span></div>
+    <div class="cli done" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Spike aerated the lawn</div><div class="cls">Not plug, but better than nothing — helped W&amp;F penetrate.</div></div><span class="cbadge b-done">Done</span></div>
+    <div class="cli done" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Applied Weed &amp; Feed</div><div class="cls">Working now. Give it 3–4 weeks to show full results.</div></div><span class="cbadge b-done">Done</span></div>
   </div>
 
   <div class="clg">
-    <div class="clgh">Phase 1 — Immediate action required</div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Walk yard & take before photos</div><div class="cls">Document the chaos. Proof of progress matters.</div></div><span class="clbadge b-hot">Today</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">First mow — highest deck, bag clippings</div><div class="cls">4–4.5 inches. No mulching. Straight rows.</div></div><span class="clbadge b-hot">Wed 18</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Buy supplies — Home Depot, Antelope Rd</div><div class="cls">Pre-emergent + post-emergent + spreader. See Armory.</div></div><span class="clbadge b-hot">Thu 19</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Apply spring pre-emergent</div><div class="cls">Soil ~55°F — window is open NOW. Water in within 24hrs.</div></div><span class="clbadge b-now">Fri 20</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Spray post-emergent on visible weeds</div><div class="cls">Calm day, under 85°F, no rain in 24hrs.</div></div><span class="clbadge b-now">Sat 21</span></div>
+    <div class="clgh">Ongoing — current maintenance routine</div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Establish Saturday mowing routine</div><div class="cls">Early morning. 2.5–3 inch deck. Every single week.</div></div><span class="cbadge b-now">Now</span></div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Water twice a week (Tue &amp; Thu mornings)</div><div class="cls">Deep and infrequent. 1 inch per week total. Morning only.</div></div><span class="cbadge b-now">Now</span></div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Wednesday weed patrol — 10 min walk</div><div class="cls">Pull stragglers by hand. Weekly patrol prevents relapse.</div></div><span class="cbadge b-now">Now</span></div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Sharpen mower blade (once per season)</div><div class="cls">Dull blades tear grass and invite disease.</div></div><span class="cbadge b-now">Spring</span></div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Assess Weed &amp; Feed results (~4 weeks post-apply)</div><div class="cls">What's dead? What needs a follow-up spot spray?</div></div><span class="cbadge b-now">Late Apr</span></div>
   </div>
 
   <div class="clg">
-    <div class="clgh">Phase 1 continued — Weeks 2–4</div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">2nd mow — lower deck one notch</div><div class="cls">Still bagging. Looking more like a lawn every time.</div></div><span class="clbadge b-now">Sat Mar 28</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Install lawn edging borders</div><div class="cls">Between lawn and beds. 4–6 inch depth. Looks pro immediately.</div></div><span class="clbadge b-now">Week 2</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Apply wood chip mulch to all garden beds</div><div class="cls">3 inches deep. Smothers weed seeds. Huge impact.</div></div><span class="clbadge b-now">Week 2–3</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Reach target mow height (2.5–3 inches)</div><div class="cls">Gradually lower each pass. No rushing.</div></div><span class="clbadge b-now">Week 3–4</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Sharpen mower blade</div><div class="cls">Dull blades tear grass and invite disease. Once a season.</div></div><span class="clbadge b-soon">Spring</span></div>
+    <div class="clgh">Summer — May through August</div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Raise mow deck to 3.5 inches for summer</div><div class="cls">Taller grass shades soil, reduces water loss, fewer weeds.</div></div><span class="cbadge b-soon">May</span></div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Increase watering to 1.5 inches/week in 3 sessions</div><div class="cls">Sacramento summers demand it. Still morning only.</div></div><span class="cbadge b-soon">June–Aug</span></div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Apply fall pre-emergent (if NOT overseeding)</div><div class="cls">Late August. Before soil drops below 70°F. Blocks winter weeds.</div></div><span class="cbadge b-soon">Late Aug</span></div>
   </div>
 
   <div class="clg">
-    <div class="clgh">Phase 2 — April onwards</div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Core aerate compacted areas</div><div class="cls">Rent from Home Depot. Sacramento clay absolutely needs this.</div></div><span class="clbadge b-soon">April</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Add compost to bare patches</div><div class="cls">1–2 inches raked in. Best soil improvement available.</div></div><span class="clbadge b-soon">April</span></div>
+    <div class="clgh">Fall — the main event</div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Rent PLUG core aerator (Home Depot Tool Rental)</div><div class="cls">Not spike — plug. Removes actual soil cores. Different league.</div></div><span class="cbadge b-fall">September</span></div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Overseed thin and bare patches with tall fescue</div><div class="cls">Right after plug aerating for best seed-to-soil contact.</div></div><span class="cbadge b-fall">September</span></div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Apply main fall fertilizer (high N, slow-release)</div><div class="cls">Most important fertilizer application of the entire year.</div></div><span class="cbadge b-fall">Sept–Oct</span></div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Winterizer fertilizer (high K)</div><div class="cls">October. Strengthens roots for winter. Then you're done.</div></div><span class="cbadge b-fall">October</span></div>
+    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Take after photos &amp; compare to spring</div><div class="cls">Post them. That transformation is yours. You built that.</div></div><span class="cbadge b-fall">October</span></div>
+  </div>
+</section>
+
+<!-- WEED INTEL -->
+<section class="sec" id="intel">
+  <div class="sh"><span class="sid">SEC-06</span><div><div class="stitle">WEED <span class="g">INTEL</span></div><div class="sdesc">// Know your enemy · Citrus Heights common threats</div></div></div>
+
+  <div style="overflow-x:auto;margin-bottom:20px;border:1px solid var(--border2);border-radius:5px">
+    <table class="tbl">
+      <thead><tr><th>Type</th><th>What it does</th><th>When to apply</th><th>Products</th><th>Critical note</th></tr></thead>
+      <tbody>
+        <tr><td>Pre-emergent 🛡️</td><td>Soil barrier — stops seeds germinating</td><td>Feb–Mar (55°F) &amp; Aug–Sep (below 70°F)</td><td>Prodiamine, Scotts Halts</td><td>Kills grass seed too. No seeding within 6–8 weeks.</td></tr>
+        <tr><td>Post-emergent selective 🎯</td><td>Kills weeds, not grass</td><td>When weeds are actively growing and visible</td><td>Ortho Weed B Gon, Spectracide</td><td>Under 85°F. No rain in 24hrs. Calm winds only.</td></tr>
+        <tr><td>Weed &amp; Feed ✅</td><td>Post-emergent + fertilizer combo</td><td>Spring or fall, actively growing weeds</td><td>Scotts Turf Builder W+F</td><td>Already applied. Wait 4 weeks before reapplication.</td></tr>
+        <tr><td>Non-selective ☢️</td><td>Kills everything — lawn, weeds, all of it</td><td>Beds, borders, paths only</td><td>Roundup/glyphosate</td><td>Never on the lawn. Wait 2 weeks before replanting.</td></tr>
+      </tbody>
+    </table>
   </div>
 
-  <div class="clg">
-    <div class="clgh">Phase 3 — The fall push</div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Apply fall pre-emergent (Aug–Sep)</div><div class="cls">Before soil drops below 70°F. Blocks all winter annual weeds.</div></div><span class="clbadge b-soon">Aug–Sep</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Core aerate + overseed (September)</div><div class="cls">Most important fall task. Fill thin spots. Improve soil structure.</div></div><span class="clbadge b-soon">Sept</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Main fall fertilizer application</div><div class="cls">High nitrogen, slow-release. Primary annual feeding for fescue.</div></div><span class="clbadge b-soon">Sept–Oct</span></div>
-    <div class="cli" onclick="chk(this)"><div class="clb">✓</div><div><div class="clt">Take after photos & compare to March</div><div class="cls">Post it somewhere. That transformation is yours. You did that.</div></div><span class="clbadge b-soon">October</span></div>
+  <div class="wgrid">
+    <div class="wcard"><div class="whdr"><span class="wname">Crabgrass</span><span class="ttag hi">HIGH</span></div><div class="wbody">Annual. Germinates when soil hits 55°F. Dense and spreading. Nearly impossible once established. The crabgrass does not negotiate.<div class="wtac">Pre-emergent Feb–Mar. The W&amp;F you applied helps.</div></div></div>
+    <div class="wcard"><div class="whdr"><span class="wname">Dandelion</span><span class="ttag md">MED</span></div><div class="wbody">Deep taproot. Regrows from fragments. Spreads by parachute like it's having fun. It is not your friend.<div class="wtac">W&amp;F should handle it. Pull survivors after rain.</div></div></div>
+    <div class="wcard"><div class="whdr"><span class="wname">Oxalis / Clover</span><span class="ttag hi">HIGH</span></div><div class="wbody">Aggressive spreader. Very common in Sacramento clay. Needs multiple treatments. Will outlast your patience if you let it.<div class="wtac">Spot spray with selective post-emergent if it survives W&amp;F.</div></div></div>
+    <div class="wcard"><div class="whdr"><span class="wname">Chickweed / Filaree</span><span class="ttag md">MED</span></div><div class="wbody">Winter annuals. Germinate fall, appear spring. Block with fall pre-emergent in August before they exist.<div class="wtac">Fall pre-emergent Aug–Sep is the key move.</div></div></div>
+    <div class="wcard"><div class="whdr"><span class="wname">Bindweed</span><span class="ttag hi">HIGH</span></div><div class="wbody">The nightmare. Deep roots. Vines everything. Has survived multiple mass extinction events. Probably.<div class="wtac">Glyphosate on vines in beds only. Month-long battle.</div></div></div>
+    <div class="wcard"><div class="whdr"><span class="wname">Spurge</span><span class="ttag lo">LOW</span></div><div class="wbody">Low-growing summer annual. Loves hot dry Citrus Heights soil. Basically designed to live in your yard.<div class="wtac">Spring pre-emergent or spot spray. Not a big threat.</div></div></div>
   </div>
 </section>
 
 <!-- ARMORY -->
 <section class="sec" id="armory">
-  <div class="sh"><span class="sid">SEC-07</span><div><div class="stitle">THE <span class="g">ARMORY</span></div><div class="sdesc">// All supplies needed · Set your store to Antelope Rd first · Check stock before driving</div></div></div>
+  <div class="sh"><span class="sid">SEC-07</span><div><div class="stitle">THE <span class="g">ARMORY</span></div><div class="sdesc">// What you'll need next · Home Depot Antelope Rd</div></div></div>
 
   <div class="sbanner">
-    <div><div class="sbname">🏠 Home Depot — Antelope Rd, Citrus Heights</div><div class="sbsub">Set this as your store first. Every link below shows live local stock + aisle/bay number.</div></div>
+    <div><div class="sbname">🏠 Home Depot — Antelope Rd, Citrus Heights</div><div class="sbsub">Set this as your store first — links show live local stock + aisle number</div></div>
     <a href="https://www.homedepot.com/s/store?storeId=6617" target="_blank" class="sbbtn">Set My Store →</a>
   </div>
 
-  <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:18px;padding:9px 13px;border:1px solid var(--border);border-radius:4px;line-height:1.7">
-    // PRO TIP: Download the Home Depot app → set store to Antelope Rd → search each item → it shows exact aisle and bay number. Saves you wandering the garden section for 20 minutes wondering if "lawn care" and "weed control" are in the same aisle. (They're not.)
+  <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:16px;padding:8px 12px;border:1px solid var(--border);border-radius:4px;line-height:1.7">// PRO TIP: Use the Home Depot app → set store to Antelope Rd → it shows exact aisle + bay number. Saves 20 minutes of wandering. The garden center and lawn care aisles are not the same aisle. Never have been.</div>
+
+  <div class="shdr g">⚡ You probably already have these — confirm you're stocked</div>
+  <div class="pgrid" style="margin-bottom:20px">
+    <div class="pcard"><div class="ptop"><div class="pico">🎯</div><div><div class="pname">Post-emergent (selective)</div><div class="pbrand">Ortho Weed B Gon</div></div></div><div class="pdesc">For spot-treating any weeds that survive the Weed &amp; Feed. Keep on hand all season.</div><div class="pmeta"><span class="ptiming">As needed</span><a href="https://www.homedepot.com/s/ortho%20weed%20b%20gon" target="_blank" class="hdbtn">Check Stock →</a></div></div>
+    <div class="pcard"><div class="ptop"><div class="pico">📡</div><div><div class="pname">Broadcast Spreader</div><div class="pbrand">Scotts EdgeGuard Mini</div></div></div><div class="pdesc">For fall fertilizer and fall pre-emergent. You'll use this every year.</div><div class="pmeta"><span class="ptiming">Already own?</span><a href="https://www.homedepot.com/s/scotts%20edgeguard%20spreader" target="_blank" class="hdbtn">Check Stock →</a></div></div>
   </div>
 
-  <div class="shdr g">⚡ Buy This Week — Phase 1</div>
-  <div class="pgrid" style="margin-bottom:24px">
-    <div class="pcard"><div class="ptop"><div class="pico">🛡️</div><div><div class="pname">Pre-emergent</div><div class="pbrand">Scotts Halts Crabgrass Preventer</div></div></div><div class="pdesc">Granular. Easiest for DIY. Spread with broadcaster, water in within 24hrs. Spring window is OPEN RIGHT NOW.</div><div class="pmeta"><span class="ptiming">Apply: This week</span><a href="https://www.homedepot.com/s/scotts%20halts%20crabgrass%20preventer" target="_blank" class="hdbtn">Check Stock →</a></div></div>
-    <div class="pcard"><div class="ptop"><div class="pico">🎯</div><div><div class="pname">Post-emergent</div><div class="pbrand">Ortho Weed B Gon</div></div></div><div class="pdesc">Selective — kills broadleaf weeds on lawn without harming grass. Ready-to-spray or concentrate.</div><div class="pmeta"><span class="ptiming">Apply: 2–3 days after mowing</span><a href="https://www.homedepot.com/s/ortho%20weed%20b%20gon" target="_blank" class="hdbtn">Check Stock →</a></div></div>
-    <div class="pcard"><div class="ptop"><div class="pico">☢️</div><div><div class="pname">Non-selective</div><div class="pbrand">Roundup Ready-to-Use</div></div></div><div class="pdesc">Kills everything. For beds, borders, and paths ONLY. Never on the lawn. Wait 2 weeks before replanting.</div><div class="pmeta"><span class="ptiming">Beds & borders only</span><a href="https://www.homedepot.com/s/roundup%20ready%20to%20use" target="_blank" class="hdbtn">Check Stock →</a></div></div>
-    <div class="pcard"><div class="ptop"><div class="pico">📡</div><div><div class="pname">Broadcast Spreader</div><div class="pbrand">Scotts EdgeGuard Mini</div></div></div><div class="pdesc">~$35. For pre-emergent and fertilizer. You'll use this for years. Non-optional equipment.</div><div class="pmeta"><span class="ptiming">Buy once, use forever</span><a href="https://www.homedepot.com/s/scotts%20edgeguard%20spreader" target="_blank" class="hdbtn">Check Stock →</a></div></div>
-    <div class="pcard"><div class="ptop"><div class="pico">🌿</div><div><div class="pname">Lawn Edging</div><div class="pbrand">Metal or plastic, 4–6 inch depth</div></div></div><div class="pdesc">Between lawn and garden beds. The single detail that makes a lawn look intentional instead of accidental.</div><div class="pmeta"><span class="ptiming">Install: Week 2</span><a href="https://www.homedepot.com/s/landscape%20edging%20border" target="_blank" class="hdbtn">Check Stock →</a></div></div>
-    <div class="pcard"><div class="ptop"><div class="pico">🪵</div><div><div class="pname">Wood Chip Mulch</div><div class="pbrand">Vigoro or Scotts bagged</div></div></div><div class="pdesc">3 inches deep in all garden beds. Smothers weed seeds. Retains moisture. Huge bang for very little effort.</div><div class="pmeta"><span class="ptiming">Apply: Week 2–3</span><a href="https://www.homedepot.com/s/vigoro%20wood%20chip%20mulch" target="_blank" class="hdbtn">Check Stock →</a></div></div>
-  </div>
-
-  <div class="shdr">📅 Buy in April / Fall</div>
+  <div class="shdr">📅 Buy for fall — order/pickup by late August</div>
   <div class="pgrid">
-    <div class="pcard"><div class="ptop"><div class="pico">🌱</div><div><div class="pname">Compost</div><div class="pbrand">Vigoro or Kellogg Garden Soil</div></div></div><div class="pdesc">1–2 cubic yards. Best investment for clay soil. Nothing else comes close for long-term improvement.</div><div class="pmeta"><span class="ptiming">Buy: April</span><a href="https://www.homedepot.com/s/vigoro%20compost%20soil%20amendment" target="_blank" class="hdbtn">Check Stock →</a></div></div>
-    <div class="pcard"><div class="ptop"><div class="pico">💊</div><div><div class="pname">Starter Fertilizer</div><div class="pbrand">Scotts Turf Builder Starter Food</div></div></div><div class="pdesc">High phosphorus. Use when overseeding bare patches. Promotes deep root development where you need it.</div><div class="pmeta"><span class="ptiming">Buy: Before overseeding</span><a href="https://www.homedepot.com/s/scotts%20turf%20builder%20starter%20food" target="_blank" class="hdbtn">Check Stock →</a></div></div>
-    <div class="pcard"><div class="ptop"><div class="pico">🌾</div><div><div class="pname">Tall Fescue Seed</div><div class="pbrand">Pennington The Rebels</div></div></div><div class="pdesc">Look for "turf-type tall fescue." Plan for September planting. Buy more than you think you need.</div><div class="pmeta"><span class="ptiming">Plant: September</span><a href="https://www.homedepot.com/s/pennington%20tall%20fescue%20grass%20seed" target="_blank" class="hdbtn">Check Stock →</a></div></div>
-    <div class="pcard"><div class="ptop"><div class="pico">🔧</div><div><div class="pname">Core Aerator Rental</div><div class="pbrand">Home Depot Tool Rental</div></div></div><div class="pdesc">~$80–100/day. Every September, no exceptions. Clay soil transformation. Book in advance — they sell out in fall.</div><div class="pmeta"><span class="ptiming">Rent: September annually</span><a href="https://www.homedepot.com/c/tool_and_truck_rental" target="_blank" class="hdbtn">Tool Rental →</a></div></div>
+    <div class="pcard"><div class="ptop"><div class="pico">🌾</div><div><div class="pname">Tall Fescue Seed</div><div class="pbrand">Pennington The Rebels or Scotts TTTF</div></div></div><div class="pdesc">For overseeding bare patches in September. Look for "turf-type tall fescue." Get more than you think.</div><div class="pmeta"><span class="ptiming">Plant: September</span><a href="https://www.homedepot.com/s/pennington%20tall%20fescue%20grass%20seed" target="_blank" class="hdbtn">Check Stock →</a></div></div>
+    <div class="pcard"><div class="ptop"><div class="pico">🛡️</div><div><div class="pname">Fall Pre-emergent</div><div class="pbrand">Scotts Halts or Prodiamine</div></div></div><div class="pdesc">Apply late August before soil drops below 70°F. Blocks chickweed, poa annua, filaree all winter.</div><div class="pmeta"><span class="ptiming">Apply: Late Aug</span><a href="https://www.homedepot.com/s/scotts%20halts%20crabgrass%20preventer" target="_blank" class="hdbtn">Check Stock →</a></div></div>
+    <div class="pcard"><div class="ptop"><div class="pico">💊</div><div><div class="pname">Fall Fertilizer (high N)</div><div class="pbrand">Scotts Turf Builder Fall</div></div></div><div class="pdesc">High nitrogen slow-release. The most important fertilizer application of the entire year for fescue.</div><div class="pmeta"><span class="ptiming">Apply: September</span><a href="https://www.homedepot.com/s/scotts%20turf%20builder%20fall%20fertilizer" target="_blank" class="hdbtn">Check Stock →</a></div></div>
+    <div class="pcard"><div class="ptop"><div class="pico">🔧</div><div><div class="pname">PLUG Core Aerator (rental)</div><div class="pbrand">Home Depot Tool Rental</div></div></div><div class="pdesc">This time rent the PLUG aerator — not spike. ~$80–100/day. Book in advance, they sell out in September.</div><div class="pmeta"><span class="ptiming">Rent: September</span><a href="https://www.homedepot.com/c/tool_and_truck_rental" target="_blank" class="hdbtn">Tool Rental →</a></div></div>
+    <div class="pcard"><div class="ptop"><div class="pico">🌱</div><div><div class="pname">Starter Fertilizer</div><div class="pbrand">Scotts Turf Builder Starter Food</div></div></div><div class="pdesc">High phosphorus. Use when overseeding. Promotes root development right where the new seed needs it.</div><div class="pmeta"><span class="ptiming">With overseeding</span><a href="https://www.homedepot.com/s/scotts%20turf%20builder%20starter%20food" target="_blank" class="hdbtn">Check Stock →</a></div></div>
+    <div class="pcard"><div class="ptop"><div class="pico">❄️</div><div><div class="pname">Winterizer Fertilizer</div><div class="pbrand">Scotts Turf Builder WinterGuard</div></div></div><div class="pdesc">High potassium. Applied in October. Strengthens roots before winter dormancy. Then you're done for the year.</div><div class="pmeta"><span class="ptiming">Apply: October</span><a href="https://www.homedepot.com/s/scotts%20winterguard%20fertilizer" target="_blank" class="hdbtn">Check Stock →</a></div></div>
   </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="sec" id="projects">
+  <div class="sh"><span class="sid">SEC-08</span><div><div class="stitle">SIDE <span class="g">PROJECTS</span></div><div class="sdesc">// Yard improvement ops · In order of priority · Click any project for full steps</div></div></div>
+
+  <div class="quip"><span>⚠️</span><span>Your wife has been asking about Project 1 for a year. That one goes first. The lawn will still be there when you get back.</span></div>
+
+  <!-- PROJECT CARDS OVERVIEW -->
+  <div class="proj-grid">
+
+    <!-- P1 SANDPIT -->
+    <div class="proj-card urgent" id="pc1">
+      <div class="proj-hdr">
+        <div style="display:flex;align-items:flex-start;gap:8px">
+          <div class="proj-num">01</div>
+          <div>
+            <div class="proj-title">Demolish the Sandpit</div>
+            <div class="proj-sub">6×8 ft · Backyard · ~$60 · Weekend</div>
+          </div>
+        </div>
+        <span class="proj-status ps-now">Do First</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-why">Your wife has been asking for a year. Neighbourhood cats are using it as a litter box. It's growing weeds. There is no reason this still exists. Godspeed.</div>
+        <button class="proj-toggle" id="pt1" onclick="toggleProj(1)">View full guide + steps</button>
+      </div>
+      <div class="proj-detail" id="pd1">
+        <div class="steps">
+          <div class="steps-title">Step by step</div>
+          <div class="step"><div class="step-n">1</div><div class="step-content"><div class="step-title">Post the sand on Facebook Marketplace</div><div class="step-desc">List it as "free play sand / fill sand — you shovel and haul." Add a photo. It will be gone within hours. People love free sand for sandboxes, concrete mixing, leveling ground, drainage projects.</div><div class="step-tip">Be upfront that it's been an outdoor pit. People using it for non-sandbox purposes won't care at all.</div></div></div>
+          <div class="step"><div class="step-n">2</div><div class="step-content"><div class="step-title">Shovel out as much sand as possible</div><div class="step-desc">Get the bulk of it out. You don't need every grain — just get it below the level of the concrete and paver edges. Wheelbarrow into piles for Marketplace pickup.</div><div class="step-tip">Leave the last inch or two. Nobody will notice and it's not worth breaking your back over.</div></div></div>
+          <div class="step"><div class="step-n">3</div><div class="step-content"><div class="step-title">Check for a liner underneath</div><div class="step-desc">Dig down a little and see what's under the sand — bare soil, weed barrier, or gravel drainage layer. If there's a weed barrier, leave it. If there's just bare soil, lay a sheet of landscape fabric before adding topsoil.</div></div></div>
+          <div class="step"><div class="step-n">4</div><div class="step-content"><div class="step-title">Fill with topsoil to just below the edges</div><div class="step-desc">You need about 5–6 cubic feet of topsoil — one bag of garden soil from Home Depot (~$8). Fill to just below the paver and concrete edge height so the sod sits flush when laid. Rake level.</div><div class="step-tip">Water it thoroughly and wait a day for it to settle. Top up any low spots before sodding.</div></div></div>
+          <div class="step"><div class="step-n">5</div><div class="step-content"><div class="step-title">Buy sod rolls — 6 rolls total</div><div class="step-desc">Each roll is 2×5 ft (10 sq ft). Your pit is 48 sq ft so 5 rolls covers it — get 6 for a little extra. ~$5–7 per roll at Home Depot or Lowe's. Tall fescue to match your lawn.</div><div class="step-tip">Buy rolls the same day you plan to lay them. Sod dries out fast sitting on concrete in Sacramento heat.</div></div></div>
+          <div class="step"><div class="step-n">6</div><div class="step-content"><div class="step-title">Lay the sod</div><div class="step-desc">Lay rolls tight against each other with no gaps. Stagger the seams like brickwork so joins don't line up. Press firmly into the soil. Trim around the concrete and paver edges with a sharp utility knife — the existing borders make this clean and easy.</div></div></div>
+          <div class="step"><div class="step-n">7</div><div class="step-content"><div class="step-title">Water immediately and daily for 2 weeks</div><div class="step-desc">Water thoroughly right after laying. For the first 14 days water daily to keep the roots moist. After that drop to your normal lawn schedule. Don't mow until it's firmly rooted — tug test: if it lifts, wait.</div><div class="step-tip">Lay it in the morning, not midday. Sacramento heat will dry out fresh sod fast if you're not careful.</div></div></div>
+        </div>
+        <div class="proj-supplies">
+          <div class="steps-title">What you need</div>
+          <div class="supply-row"><div><div class="supply-name">Garden topsoil (1 bag)</div><div class="supply-detail">~1.5 cubic ft bag</div></div><div class="supply-right"><span class="supply-cost">~$8</span><a href="https://www.homedepot.com/s/garden%20topsoil%20bag" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Tall fescue sod rolls (×6)</div><div class="supply-detail">2×5 ft each, ~10 sq ft per roll</div></div><div class="supply-right"><span class="supply-cost">~$35</span><a href="https://www.homedepot.com/s/tall%20fescue%20sod%20roll" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Landscape fabric (optional)</div><div class="supply-detail">Only if no liner exists under the sand</div></div><div class="supply-right"><span class="supply-cost">~$10</span><a href="https://www.homedepot.com/s/landscape%20fabric" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Utility knife</div><div class="supply-detail">For trimming sod edges</div></div><div class="supply-right"><span class="supply-cost">Probably own</span></div></div>
+          <div class="supply-row" style="border-top:1px solid var(--border2);margin-top:4px;padding-top:8px"><div><div class="supply-name" style="color:var(--green2)">Total estimated cost</div></div><div class="supply-right"><span class="supply-cost" style="font-size:14px;color:var(--green)">~$55–65</span></div></div>
+        </div>
+        <div class="proj-checks">
+          <div class="steps-title">Project checklist</div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Post sand on Facebook Marketplace — "free, you haul"</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Shovel out the bulk of the sand</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Check for liner — add landscape fabric if bare soil</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Fill with topsoil, rake level, water and let settle</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Buy 6 rolls of tall fescue sod (same day as laying)</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Lay sod, stagger seams, trim edges, press down firmly</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Water daily for 2 weeks until rooted</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Show your wife. Accept credit graciously.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P2 BRICK PILLARS -->
+    <div class="proj-card" id="pc2">
+      <div class="proj-hdr">
+        <div style="display:flex;align-items:flex-start;gap:8px">
+          <div class="proj-num">02</div>
+          <div>
+            <div class="proj-title">Remove Brick Pillars & Chain</div>
+            <div class="proj-sub">Front yard · ~$60 · One weekend</div>
+          </div>
+        </div>
+        <span class="proj-status ps-next">Next Up</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-why">Those pillars and chain are very "1987 tract home." Removing them immediately modernizes the curb appeal, makes the front yard look larger, and opens up the bed for a proper planting design.</div>
+        <button class="proj-toggle" id="pt2" onclick="toggleProj(2)">View full guide + steps</button>
+      </div>
+      <div class="proj-detail" id="pd2">
+        <div class="steps">
+          <div class="steps-title">Step by step</div>
+          <div class="step"><div class="step-n">1</div><div class="step-content"><div class="step-title">Unhook and remove the chain</div><div class="step-desc">Start here — takes 30 seconds. Unhook both ends and set aside. The yard already looks better. Post it on Marketplace or scrap it.</div></div></div>
+          <div class="step"><div class="step-n">2</div><div class="step-content"><div class="step-title">Confirm pillars are not structural</div><div class="step-desc">Look up — are they connected to the roof, a pergola, or anything overhead? From the photos these are clearly freestanding decorative columns with no load-bearing role. You're safe to demolish.</div><div class="step-tip">If in any doubt, tap the pillar and look at the roofline. A structural column will have a visible connection point above it.</div></div></div>
+          <div class="step"><div class="step-n">3</div><div class="step-content"><div class="step-title">Knock down the bricks from the top</div><div class="step-desc">Use a cold chisel and hammer to break the mortar joints and pop bricks off one course at a time, working top to bottom. Old decorative mortar is usually brittle and breaks easily. Stack the bricks — old used brick has value and you can sell it or repurpose it.</div><div class="step-tip">Wear safety glasses. Old mortar chips fly. Not a great look in the eye.</div></div></div>
+          <div class="step"><div class="step-n">4</div><div class="step-content"><div class="step-title">Expose and remove the concrete footing</div><div class="step-desc">Dig around the base about 6 inches to expose the concrete footing. For shallow decorative footings like these, the lever method almost always works: screw a scrap 2×4 to any remaining stub close to the ground, place a landscape timber as a fulcrum alongside, and use a long metal pry bar as a lever. Stand on the bar — it pops right out.</div><div class="step-tip">If it won't budge, dig a little deeper on one side and use the digging bar as a wedge — it'll fall into the hole you created.</div></div></div>
+          <div class="step"><div class="step-n">5</div><div class="step-content"><div class="step-title">Backfill the holes</div><div class="step-desc">Fill with topsoil, tamp down firmly in layers, water to settle. Since this will be under mulch or new landscaping it doesn't need to be perfect — just filled and level.</div></div></div>
+          <div class="step"><div class="step-n">6</div><div class="step-content"><div class="step-title">Install clean steel edging along the lawn border</div><div class="step-desc">With the pillars gone there's nothing defining the bed edge. A simple black steel or aluminum landscape edging strip runs along the lawn line and looks modern and intentional — the opposite of the old brick-and-chain look. Stake it in and you're done.</div><div class="step-tip">Black 4-inch steel edging is ~$30 for the whole run. Available at Home Depot in the landscaping aisle. Completely different vibe.</div></div></div>
+          <div class="step"><div class="step-n">7</div><div class="step-content"><div class="step-title">Haul or list the debris</div><div class="step-desc">Old brick moves fast on Marketplace as free or cheap. If you're renting a dumpster anyway for the gravel project, save it all and do one haul. A half-day dumpster for brick + gravel + old landscape fabric runs ~$150–200.</div></div></div>
+        </div>
+        <div class="proj-supplies">
+          <div class="steps-title">What you need</div>
+          <div class="supply-row"><div><div class="supply-name">Cold chisel + hammer</div><div class="supply-detail">For breaking mortar joints</div></div><div class="supply-right"><span class="supply-cost">Probably own</span></div></div>
+          <div class="supply-row"><div><div class="supply-name">Rotary hammer (rental)</div><div class="supply-detail">Makes brick removal much faster</div></div><div class="supply-right"><span class="supply-cost">~$40/day</span><a href="https://www.homedepot.com/c/tool_and_truck_rental" target="_blank" class="hdbtn">HD Rental →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Long pry bar (digging bar)</div><div class="supply-detail">For levering out the footings</div></div><div class="supply-right"><span class="supply-cost">~$25</span><a href="https://www.homedepot.com/s/digging%20bar%20pry%20bar" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Black steel landscape edging</div><div class="supply-detail">4-inch, enough for the bed run</div></div><div class="supply-right"><span class="supply-cost">~$30</span><a href="https://www.homedepot.com/s/black%20steel%20landscape%20edging" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Topsoil (1 bag)</div><div class="supply-detail">To backfill the footing holes</div></div><div class="supply-right"><span class="supply-cost">~$8</span><a href="https://www.homedepot.com/s/garden%20topsoil%20bag" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row" style="border-top:1px solid var(--border2);margin-top:4px;padding-top:8px"><div><div class="supply-name" style="color:var(--green2)">Total estimated cost</div></div><div class="supply-right"><span class="supply-cost" style="font-size:14px;color:var(--green)">~$60–100</span></div></div>
+        </div>
+        <div class="proj-checks">
+          <div class="steps-title">Project checklist</div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Remove the chain</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Confirm pillars are not structural</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Knock down bricks top to bottom — stack for reuse/sale</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Dig out and lever out concrete footings</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Backfill holes with topsoil, tamp, water</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Install black steel landscape edging along lawn border</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Dispose of or sell debris</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P3 FRONT GRAVEL BED -->
+    <div class="proj-card" id="pc3">
+      <div class="proj-hdr">
+        <div style="display:flex;align-items:flex-start;gap:8px">
+          <div class="proj-num">03</div>
+          <div>
+            <div class="proj-title">Redo the Front Gravel Bed</div>
+            <div class="proj-sub">Front strip · ~$150–250 · Weekend + planting</div>
+          </div>
+        </div>
+        <span class="proj-status ps-later">After P2</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-why">Do this after the pillars are gone since the whole bed layout changes without them. Replace the weed-infested gravel with dark mulch, keep the sago palm, add 2–3 drought-tolerant plants. Completely different curb appeal.</div>
+        <button class="proj-toggle" id="pt3" onclick="toggleProj(3)">View full guide + steps</button>
+      </div>
+      <div class="proj-detail" id="pd3">
+        <div class="steps">
+          <div class="steps-title">Step by step</div>
+          <div class="step"><div class="step-n">1</div><div class="step-content"><div class="step-title">Spray everything with glyphosate</div><div class="step-desc">Hit all weeds in the gravel bed with Roundup. Wait 2 weeks for full kill before doing anything else. Do NOT skip this step — any living roots left under the mulch will push straight through it.</div><div class="step-tip">Spray on a calm dry day. Protect the sago palm — don't let overspray hit the fronds.</div></div></div>
+          <div class="step"><div class="step-n">2</div><div class="step-content"><div class="step-title">Remove or redistribute the gravel</div><div class="step-desc">Option A: rake it to the side yard to top up the gravel there — two birds one stone. Option B: post on Facebook Marketplace "free gravel, you shovel." Option C: shovel into a dumpster if you're already renting one for the brick debris.</div><div class="step-tip">If the gravel layer is less than 2 inches thick and you're in a hurry, you can leave it and lay fabric + mulch on top. It actually helps drainage.</div></div></div>
+          <div class="step"><div class="step-n">3</div><div class="step-content"><div class="step-title">Trim the sago palm pups</div><div class="step-desc">Those fuzzy round offshoots at the base need to come off — they cause the messy tangled look. Wear gloves (the spines are sharp). Twist and pry pups off with a flat tool or your hands when they're small. Cut back any dead or brown fronds flush to the trunk.</div><div class="step-tip">Wear gloves — all parts of a sago palm are toxic. Keep the cuts clean and don't hack into the crown (the growing tip at the center) or you'll kill it.</div></div></div>
+          <div class="step"><div class="step-n">4</div><div class="step-content"><div class="step-title">Lay landscape fabric</div><div class="step-desc">Cover the entire bed with heavy-duty woven landscape fabric. Cut an X around the sago palm base and fold the edges under. Overlap pieces by at least 6 inches. Secure with landscape staples every 18 inches.</div><div class="step-tip">Use the heavy contractor-grade fabric, not the thin stuff. The thin black fabric tears within a year and weeds laugh at it.</div></div></div>
+          <div class="step"><div class="step-n">5</div><div class="step-content"><div class="step-title">Choose your 2–3 companion plants</div><div class="step-desc">Plant in fall (October) when Sacramento rains return and temps cool — plants establish much better this way with zero supplemental watering needed. Best options for this bed: Lavender (drought tolerant, purple flowers, great scale), Mexican sage / Salvia leucantha (fall purple blooms, 3 ft wide, almost zero care), or Dwarf rosemary (evergreen, structural, edible bonus).</div><div class="step-tip">One plant on each side of the sago palm is enough. Don't overcrowd — the sago will slowly get wider over the years.</div></div></div>
+          <div class="step"><div class="step-n">6</div><div class="step-content"><div class="step-title">Add 3 inches of dark wood chip mulch</div><div class="step-desc">Cut slits in the landscape fabric for your plants first, then spread mulch 3 inches deep over the entire bed. Keep mulch 3 inches away from the sago trunk — mulch against the caudex causes rot. Natural brown or cedar mulch only — dyed black fades to grey after one Sacramento summer and looks terrible.</div></div></div>
+          <div class="step"><div class="step-n">7</div><div class="step-content"><div class="step-title">Apply pre-emergent twice yearly going forward</div><div class="step-desc">This is the maintenance step people always skip and then wonder why the weeds come back. Granular pre-emergent in February and again in August keeps the bed almost entirely weed-free. Scatter over the mulch and water in.</div></div></div>
+        </div>
+        <div class="proj-supplies">
+          <div class="steps-title">What you need</div>
+          <div class="supply-row"><div><div class="supply-name">Roundup / Glyphosate</div><div class="supply-detail">For killing existing weeds first</div></div><div class="supply-right"><span class="supply-cost">~$15</span><a href="https://www.homedepot.com/s/roundup%20ready%20to%20use" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Heavy landscape fabric</div><div class="supply-detail">Contractor-grade woven, enough for the bed</div></div><div class="supply-right"><span class="supply-cost">~$25</span><a href="https://www.homedepot.com/s/woven%20landscape%20fabric%20contractor" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Landscape staples (bag)</div><div class="supply-detail">To secure the fabric</div></div><div class="supply-right"><span class="supply-cost">~$10</span><a href="https://www.homedepot.com/s/landscape%20fabric%20staples" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Wood chip mulch (3–4 bags)</div><div class="supply-detail">Natural brown or cedar — NOT dyed</div></div><div class="supply-right"><span class="supply-cost">~$30</span><a href="https://www.homedepot.com/s/cedar%20wood%20chip%20mulch" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">2–3 drought-tolerant plants</div><div class="supply-detail">Lavender, Mexican sage, or dwarf rosemary</div></div><div class="supply-right"><span class="supply-cost">~$30–60</span><a href="https://www.homedepot.com/s/lavender%20plant%20gallon" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Black steel landscape edging</div><div class="supply-detail">If not already installed from Project 2</div></div><div class="supply-right"><span class="supply-cost">~$30</span><a href="https://www.homedepot.com/s/black%20steel%20landscape%20edging" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row" style="border-top:1px solid var(--border2);margin-top:4px;padding-top:8px"><div><div class="supply-name" style="color:var(--green2)">Total estimated cost</div></div><div class="supply-right"><span class="supply-cost" style="font-size:14px;color:var(--green)">~$140–180</span></div></div>
+        </div>
+        <div class="proj-checks">
+          <div class="steps-title">Project checklist</div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Spray all weeds with glyphosate — wait 2 weeks</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Remove or redistribute the gravel</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Trim sago palm pups and dead fronds (wear gloves)</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Lay heavy landscape fabric, staple down, cut around sago</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Choose and buy companion plants (plant in October)</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Cut slits in fabric, plant, spread 3" mulch over entire bed</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Keep mulch 3" away from sago trunk base</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Set a reminder: pre-emergent in February and August</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P4 LAUNDRY ROOM -->
+    <div class="proj-card urgent" id="pc4">
+      <div class="proj-hdr">
+        <div style="display:flex;align-items:flex-start;gap:8px">
+          <div class="proj-num">04</div>
+          <div>
+            <div class="proj-title">Laundry Room Countertop + Shelf</div>
+            <div class="proj-sub">Indoors · ~$100–200 · This rainy weekend</div>
+          </div>
+        </div>
+        <span class="proj-status ps-now">This Weekend</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-why">Perfect rainy weekend project — 100% indoors. Unstack the LG pair, build a countertop above them at ~39" height, add a shelf above that. Turns a utility closet into an actual laundry room. Folding laundry on top of the dryer is a crime against your back.</div>
+        <button class="proj-toggle" id="pt4" onclick="toggleProj(4)">View full guide + steps</button>
+      </div>
+      <div class="proj-detail" id="pd4">
+
+        <div class="steps">
+          <div class="steps-title">Key measurements — LG DLE3400W</div>
+          <div class="step"><div class="step-n" style="font-size:13px;width:auto;padding-right:8px">📐</div><div class="step-content">
+            <div class="step-desc" style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;margin-top:0">
+              <span style="color:var(--text2)">Each unit width</span><span style="color:var(--green)">27"</span>
+              <span style="color:var(--text2)">Each unit depth</span><span style="color:var(--green)">30"</span>
+              <span style="color:var(--text2)">Each unit height</span><span style="color:var(--green)">38¾"</span>
+              <span style="color:var(--text2)">Two units side by side</span><span style="color:var(--green)">54" minimum</span>
+              <span style="color:var(--text2)">Countertop sits at</span><span style="color:var(--green)">~39–40"</span>
+              <span style="color:var(--text2)">Countertop depth</span><span style="color:var(--green)">Match at 30"</span>
+            </div>
+            <div class="step-tip">Measure your actual wall space before buying anything — account for the water heater clearance on the right. Add 1–2" overhang on the front edge of the countertop so it looks finished.</div>
+          </div></div>
+        </div>
+
+        <div class="steps" style="border-top:1px solid var(--border)">
+          <div class="steps-title">Step by step</div>
+          <div class="step"><div class="step-n">1</div><div class="step-content"><div class="step-title">Unstack the machines</div><div class="step-desc">These LG units weigh ~122 lbs each — don't do this alone. Get someone to help. Disconnect the dryer power (240V electric — unplug from wall first), then carefully lift the dryer down. Slide both units out slightly to give yourself room to work.</div><div class="step-tip">Tape the dryer door shut before moving so it doesn't swing open. Ask me how people learn this the hard way.</div></div></div>
+          <div class="step"><div class="step-n">2</div><div class="step-content"><div class="step-title">Paint the walls first</div><div class="step-desc">Do this now before the countertop goes in — it's infinitely easier to paint without a shelf in the way. Patch any drywall holes or scuffs first with spackle, let dry, sand smooth. Two coats of your chosen colour. A laundry room is a great place to go bold — dark navy, deep green, terracotta, or a warm white all look sharp in a small utility space.</div><div class="step-tip">Use a satin or semi-gloss finish in a laundry room — it wipes clean and handles the humidity better than flat or eggshell.</div></div></div>
+          <div class="step"><div class="step-n">3</div><div class="step-content"><div class="step-title">Measure and cut your countertop board</div><div class="step-desc">Measure the actual wall width from left wall to the water heater (or wherever you want it to end). Cut your countertop to that width. Standard depth is 30" to match the machines — add a 1–1.5" front overhang so it looks intentional. For material: melamine-faced MDF (~$40) is the easiest and most practical for a laundry room — wipes clean, moisture resistant, no finishing needed. Butcher block (~$80–120) looks great but needs sealing in a humid space.</div><div class="step-tip">Home Depot and Lowe's will make one straight cut for free at the store if you bring your measurements. Save yourself the hassle of cutting large sheet goods at home.</div></div></div>
+          <div class="step"><div class="step-n">4</div><div class="step-content"><div class="step-title">Build simple side supports</div><div class="step-desc">The countertop needs to rest on something — the machines alone won't support it properly since they vibrate. The cleanest method: two simple 2×4 or 2×2 cleats screwed into the side walls at the right height (measure from floor to 39" minus your countertop thickness). Level them carefully — this is the most important step. If your walls are drywall, hit the studs with your screws. Use a stud finder.</div><div class="step-tip">Countertop thickness is typically ¾" for MDF/plywood. So if you want the finished surface at 39½", set your cleats at 38¾" (same as machine height) and let the countertop sit flush on top of the machines and cleats.</div></div></div>
+          <div class="step"><div class="step-n">5</div><div class="step-content"><div class="step-title">Set and secure the countertop</div><div class="step-desc">Lay the countertop onto the cleats and check it's level front to back and side to side. Screw up through the cleats into the underside of the countertop — no visible screws on top. If the countertop butts against the back wall, run a small bead of paintable caulk along the back edge for a clean finish.</div></div></div>
+          <div class="step"><div class="step-n">6</div><div class="step-content"><div class="step-title">Add the upper shelf</div><div class="step-desc">For the shelf above the countertop, the simplest approach is floating shelf brackets screwed into wall studs, with a matching board on top. Standard shelf height above a counter is 18–24" — enough clearance to stand a detergent bottle upright. Depth of 12–16" is plenty for a laundry shelf (you don't need it as deep as the counter). Make sure you hit studs — laundry products are heavy.</div><div class="step-tip">Two heavy-duty floating shelf brackets at ~$8 each from HD, plus a piece of 1×12 board cut to width. Paint the board to match the countertop or walls. Total shelf cost: ~$25–35.</div></div></div>
+          <div class="step"><div class="step-n">7</div><div class="step-content"><div class="step-title">Slide machines back in and reconnect</div><div class="step-desc">Slide washer and dryer back into position side by side. Reconnect the dryer power cord (plug back into the 240V outlet). Reconnect washer water hoses — check for leaks. Level both machines using the adjustable feet underneath — front-load washers vibrate badly if not level.</div><div class="step-tip">Run a short wash cycle and stand there for the spin — if it walks or shakes violently, adjust the feet. A level machine is a quiet machine.</div></div></div>
+          <div class="step"><div class="step-n">8</div><div class="step-content"><div class="step-title">Finish and trim (optional but worth it)</div><div class="step-desc">Add iron-on edge banding to any exposed plywood/MDF edges for a finished look (~$8 at HD). Caulk the gap between countertop and wall at the back. Add a power strip under the shelf or on the wall for dryer accessories. Done — you now have a proper laundry room.</div><div class="step-tip">A small hook rail on the wall next to the machines for hangers is a $15 addition that will get used every single day.</div></div></div>
+        </div>
+
+        <div class="proj-supplies">
+          <div class="steps-title">What you need</div>
+          <div class="supply-row"><div><div class="supply-name">Countertop board</div><div class="supply-detail">Melamine MDF ~54–60" long × 30" deep × ¾" thick</div></div><div class="supply-right"><span class="supply-cost">$40–120</span><a href="https://www.homedepot.com/s/melamine%20shelf%20board%2024%20inch" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Wall cleats (2×2 or 2×4 lumber)</div><div class="supply-detail">Two pieces, cut to fit side walls</div></div><div class="supply-right"><span class="supply-cost">~$8</span><a href="https://www.homedepot.com/s/2x2%20lumber%208%20foot" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Shelf board (upper shelf)</div><div class="supply-detail">1×12 board cut to width, or matching melamine</div></div><div class="supply-right"><span class="supply-cost">~$15–25</span><a href="https://www.homedepot.com/s/1x12%20pine%20board" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Heavy-duty shelf brackets (×2)</div><div class="supply-detail">For the upper shelf — hit studs</div></div><div class="supply-right"><span class="supply-cost">~$16</span><a href="https://www.homedepot.com/s/heavy%20duty%20shelf%20bracket" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Stud finder</div><div class="supply-detail">Essential for hitting studs with cleat + bracket screws</div></div><div class="supply-right"><span class="supply-cost">~$20</span><a href="https://www.homedepot.com/s/stud%20finder" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Wood screws (box)</div><div class="supply-detail">2½" for cleats into studs, 1¼" for countertop</div></div><div class="supply-right"><span class="supply-cost">~$8</span><a href="https://www.homedepot.com/s/wood%20screws%20box" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Paint + primer</div><div class="supply-detail">Satin or semi-gloss finish for laundry room walls</div></div><div class="supply-right"><span class="supply-cost">~$30–40</span><a href="https://www.homedepot.com/s/interior%20satin%20paint" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Spackle + sandpaper</div><div class="supply-detail">Patch walls before painting</div></div><div class="supply-right"><span class="supply-cost">~$8</span><a href="https://www.homedepot.com/s/lightweight%20spackle" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Paintable caulk</div><div class="supply-detail">Back edge of countertop to wall</div></div><div class="supply-right"><span class="supply-cost">~$5</span><a href="https://www.homedepot.com/s/paintable%20caulk" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row"><div><div class="supply-name">Iron-on edge banding (optional)</div><div class="supply-detail">Finish exposed MDF/plywood edges</div></div><div class="supply-right"><span class="supply-cost">~$8</span><a href="https://www.homedepot.com/s/iron%20on%20edge%20banding" target="_blank" class="hdbtn">HD →</a></div></div>
+          <div class="supply-row" style="border-top:1px solid var(--border2);margin-top:4px;padding-top:8px"><div><div class="supply-name" style="color:var(--green2)">Total estimated cost</div></div><div class="supply-right"><span class="supply-cost" style="font-size:14px;color:var(--green)">~$100–200</span></div></div>
+        </div>
+
+        <div class="proj-checks">
+          <div class="steps-title">Project checklist</div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Get help lined up — don't move 122 lb machines alone</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Unplug dryer, disconnect hoses, unstack and slide out</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Patch walls, prime and paint (satin/semi-gloss)</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Measure wall width and confirm countertop dimensions</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Buy and cut countertop board (HD will make one free cut)</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Find studs, install wall cleats level at correct height</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Set and screw down countertop, caulk back edge</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Install upper shelf brackets into studs, set shelf board</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Slide machines back in, reconnect power + hoses</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Level both machines on their adjustable feet</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Run a test wash cycle — check for leaks and vibration</span></div>
+          <div class="pcl" onclick="pchk(this)"><div class="pclb">✓</div><span class="pclt">Take a photo. The honey do list never ends but this one's done.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /proj-grid -->
 </section>
 
 </div><!-- /wrap -->
 
 <div class="foot">
-  <div style="font-family:var(--display);font-weight:900;font-size:16px;color:var(--green);text-shadow:var(--green-glow-sm);letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px">LAWN RESCUE // MISSION CONTROL</div>
-  <div>Citrus Heights CA 95621 · Zone 9b · Operation initiated March 18, 2026</div>
-  <div style="margin-top:10px">
-    <a href="https://ucanr.edu/sites/ucce_droughtinfo/" target="_blank">UC ANR Drought Info</a> ·
-    <a href="https://ipm.ucanr.edu/index.html" target="_blank">UC IPM Weed Guide</a> ·
-    <a href="https://www.lawnstarter.com/sacramento-ca-lawn-care" target="_blank">LawnStarter Sacramento</a>
-  </div>
-  <div style="margin-top:14px;opacity:.35;font-size:9px;letter-spacing:.1em">THE WEEDS PICKED THE WRONG YARD // END TRANSMISSION</div>
+  <div style="font-family:var(--disp);font-weight:900;font-size:15px;color:var(--green);text-shadow:var(--gglow-sm);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">LAWN OPS // MISSION CONTROL</div>
+  <div>Citrus Heights CA 95621 · Zone 9b · <a href="https://brandoncosta.github.io/lawncare/">brandoncosta.github.io/lawncare</a></div>
+  <div style="margin-top:8px"><a href="https://open-meteo.com/">Weather: Open-Meteo</a> · <a href="https://ucanr.edu/sites/ucce_droughtinfo/">UC ANR Drought Info</a> · <a href="https://ipm.ucanr.edu/">UC IPM Weed Guide</a></div>
+  <div style="margin-top:12px;opacity:.3;font-size:9px;letter-spacing:.1em">THE WEEDS PICKED THE WRONG YARD // END TRANSMISSION</div>
 </div>
 
-</div><!-- /main -->
+</div><!-- /app -->
 
 <script>
-// Live clock
-function tick(){const n=new Date();const t=[n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');const e=document.getElementById('clock');if(e)e.textContent=t;}
+// ── PROJECT TOGGLES ──
+function toggleProj(n){
+  const det=document.getElementById('pd'+n);
+  const btn=document.getElementById('pt'+n);
+  const open=det.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  btn.textContent=open?'Hide guide':'View full guide + steps';
+}
+
+// ── PROJECT CHECKLISTS (per-card, independent of main checklist) ──
+function pchk(el){
+  el.classList.toggle('done');
+  // save all project checklist states
+  const all=document.querySelectorAll('.pcl');
+  try{localStorage.setItem('lops-proj',JSON.stringify([...all].map(i=>i.classList.contains('done'))));}catch(e){}
+}
+(function loadPCL(){
+  try{
+    const s=JSON.parse(localStorage.getItem('lops-proj')||'[]');
+    document.querySelectorAll('.pcl').forEach((el,i)=>{if(s[i])el.classList.add('done');});
+  }catch(e){}
+})();
+
+// ── CLOCK ──
+function tick(){const n=new Date();document.getElementById('clk').textContent=[n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');}
 tick();setInterval(tick,1000);
 
-// Week switcher
+// ── WEEK TABS ──
 function sw(n,btn){
   document.querySelectorAll('.wpanel').forEach(p=>p.classList.remove('show'));
   document.querySelectorAll('.wtab').forEach(t=>t.classList.remove('on'));
@@ -696,7 +938,7 @@ function sw(n,btn){
   btn.classList.add('on');
 }
 
-// Checklist
+// ── CHECKLIST ──
 function chk(el){
   el.classList.toggle('done');
   const all=document.querySelectorAll('.cli');
@@ -704,24 +946,161 @@ function chk(el){
   const pct=Math.round((done.length/all.length)*100);
   document.getElementById('ppct').textContent=pct+'%';
   document.getElementById('pfill').style.width=pct+'%';
-  try{localStorage.setItem('lr3',JSON.stringify(Array.from(all).map(i=>i.classList.contains('done'))));}catch(e){}
+  try{localStorage.setItem('lops4',JSON.stringify([...all].map(i=>i.classList.contains('done'))));}catch(e){}
 }
+(function loadCL(){
+  try{
+    const s=JSON.parse(localStorage.getItem('lops4')||'[]');
+    const all=document.querySelectorAll('.cli');
+    all.forEach((el,i)=>{if(s[i])el.classList.add('done');});
+    const done=document.querySelectorAll('.cli.done');
+    const pct=Math.round((done.length/all.length)*100);
+    document.getElementById('ppct').textContent=pct+'%';
+    document.getElementById('pfill').style.width=pct+'%';
+  }catch(e){}
+})();
 
-// Load checklist state
-try{
-  const s=JSON.parse(localStorage.getItem('lr3')||'[]');
-  document.querySelectorAll('.cli').forEach((el,i)=>{if(s[i])el.classList.add('done');});
-  const all=document.querySelectorAll('.cli');
-  const done=document.querySelectorAll('.cli.done');
-  const pct=Math.round((done.length/all.length)*100);
-  document.getElementById('ppct').textContent=pct+'%';
-  document.getElementById('pfill').style.width=pct+'%';
-}catch(e){}
-
-// Smooth nav
-document.querySelectorAll('.nav-link').forEach(a=>{
+// ── NAV SMOOTH SCROLL ──
+document.querySelectorAll('.nav a').forEach(a=>{
   a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});
 });
+
+// ── WEATHER ──
+const LAT=38.6932;const LON=-121.3122;
+const WMO={0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Icy fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',80:'Light showers',81:'Showers',82:'Heavy showers',95:'Thunderstorm',96:'Thunderstorm + hail',99:'Severe thunderstorm'};
+const WMO_ICON={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌧️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'❄️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};
+
+function wmoDesc(c){return WMO[c]||'Unknown';}
+function wmoIcon(c){return WMO_ICON[c]||'🌡️';}
+
+async function loadWeather(){
+  try{
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America/Los_Angeles&forecast_days=7`;
+    const res=await fetch(url);
+    const d=await res.json();
+    renderCurrent(d.current);
+    renderHourly(d.hourly);
+    renderWeekForecast(d.daily);
+    renderLawnAlerts(d);
+  }catch(err){
+    document.getElementById('wCurrCond').textContent='Weather unavailable';
+    document.getElementById('weekForecast').innerHTML='<div class="w-loading" style="grid-column:1/-1;color:var(--red)">Could not load weather data. Check back later.</div>';
+  }
+}
+
+function renderCurrent(c){
+  document.getElementById('wCurrTemp').innerHTML=`${Math.round(c.temperature_2m)}<sup>°F</sup>`;
+  document.getElementById('wCurrCond').textContent=`${wmoIcon(c.weather_code)} ${wmoDesc(c.weather_code)}`;
+  document.getElementById('wCurrMeta').innerHTML=`
+    <div class="w-meta-item">Feels like <span>${Math.round(c.apparent_temperature)}°F</span></div>
+    <div class="w-meta-item">Humidity <span>${c.relative_humidity_2m}%</span></div>
+    <div class="w-meta-item">Wind <span>${Math.round(c.wind_speed_10m)} mph</span></div>
+    <div class="w-meta-item">Precip <span>${c.precipitation}"</span></div>
+  `;
+}
+
+function renderLawnAlerts(d){
+  const alerts=[];
+  const maxRain=Math.max(...d.daily.precipitation_probability_max.slice(0,3));
+  const satIdx=new Date().getDay()===6?0:((6-new Date().getDay()+7)%7);
+  const satRain=d.daily.precipitation_probability_max[satIdx]||0;
+  const hiTemps=d.daily.temperature_2m_max;
+
+  if(satRain>=60){alerts.push({type:'amber',icon:'🌧️',msg:`<strong>MOW WARNING:</strong> ${satRain}% chance of rain on Saturday. Check conditions before mowing — wet grass clumps and spreads fungal spores. Have a Sunday backup plan.`});}
+  if(hiTemps[0]>90){alerts.push({type:'red',icon:'🌡️',msg:'<strong>HEAT ALERT:</strong> High above 90°F today. Mow before 9am or wait until after 6pm. Do not water in the afternoon — it evaporates and scalds grass roots.'});}
+  if(d.current.precipitation>0.1){alerts.push({type:'blue',icon:'💧',msg:'<strong>FREE WATER:</strong> Rain detected. Skip your scheduled watering today — the lawn is already drinking. Check the soil before the next session.'});}
+  if(hiTemps.slice(0,3).every(t=>t<65)){alerts.push({type:'green',icon:'✅',msg:'<strong>IDEAL CONDITIONS:</strong> Mild temperatures all week. Great time for any lawn work — mowing, weed patrol, bed maintenance. Take advantage of it.'});}
+
+  const container=document.getElementById('weatherAlerts');
+  if(alerts.length===0){container.innerHTML='';return;}
+  container.innerHTML=alerts.map(a=>`<div class="lawn-alert ${a.type}" style="margin-bottom:10px"><span>${a.icon}</span><span>${a.msg}</span></div>`).join('');
+}
+
+function renderHourly(h){
+  const now=new Date();
+  const todayStr=now.toISOString().split('T')[0];
+  const indices=[];
+  const labels=[];
+  h.time.forEach((t,i)=>{
+    if(t.startsWith(todayStr)){
+      const hr=parseInt(t.split('T')[1].split(':')[0]);
+      if(hr>=5&&hr<=21){indices.push(i);labels.push(hr===12?'12p':hr>12?`${hr-12}p`:`${hr}a`);}
+    }
+  });
+  const temps=indices.map(i=>h.temperature_2m[i]);
+  const rains=indices.map(i=>h.precipitation_probability[i]);
+
+  // draw on canvas
+  const canvas=document.getElementById('hourlyCanvas');
+  const ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.parentElement.getBoundingClientRect();
+  canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;
+  canvas.style.width=rect.width+'px';canvas.style.height=rect.height+'px';
+  ctx.scale(dpr,dpr);
+  const W=rect.width;const H=rect.height;
+  const pad={l:28,r:8,t:10,b:4};
+  const cW=W-pad.l-pad.r;const cH=H-pad.t-pad.b;
+  const minT=Math.min(...temps)-4;const maxT=Math.max(...temps)+4;
+  const toX=i=>(pad.l+(i/(temps.length-1))*cW);
+  const toY=t=>(pad.t+cH-(t-minT)/(maxT-minT)*cH);
+
+  // rain bars
+  rains.forEach((r,i)=>{
+    if(r>0){
+      ctx.fillStyle=`rgba(68,136,255,${r/100*0.3})`;
+      ctx.fillRect(toX(i)-cW/(temps.length*2),pad.t,cW/temps.length,cH);
+    }
+  });
+
+  // temp line
+  ctx.beginPath();ctx.strokeStyle='rgba(57,255,20,0.25)';ctx.lineWidth=1;
+  for(let i=0;i<temps.length;i++){i===0?ctx.moveTo(toX(i),toY(temps[i])):ctx.lineTo(toX(i),toY(temps[i]));}
+  ctx.stroke();
+
+  // glow line
+  ctx.beginPath();ctx.strokeStyle='#39ff14';ctx.lineWidth=2;
+  for(let i=0;i<temps.length;i++){i===0?ctx.moveTo(toX(i),toY(temps[i])):ctx.lineTo(toX(i),toY(temps[i]));}
+  ctx.stroke();
+
+  // temp labels (every other)
+  ctx.font=`${8*dpr/dpr}px Share Tech Mono`;ctx.textAlign='center';
+  temps.forEach((t,i)=>{
+    if(i%2===0){
+      ctx.fillStyle='#3a5a3a';ctx.fillText(`${Math.round(t)}°`,toX(i),i%4===0?pad.t+8:H-pad.b-2);
+    }
+  });
+
+  // y axis labels
+  ctx.textAlign='right';ctx.fillStyle='#3a5a3a';
+  [minT+4,maxT-4].forEach(t=>ctx.fillText(`${Math.round(t)}°`,pad.l-4,toY(t)+3));
+
+  // time labels
+  document.getElementById('chartTimes').innerHTML=indices.filter((_,i)=>i%2===0).map((_,i)=>`<span>${labels[i*2]||''}</span>`).join('');
+}
+
+function renderWeekForecast(daily){
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today=new Date();
+  const html=daily.time.map((dateStr,i)=>{
+    const d=new Date(dateStr+'T12:00:00');
+    const isToday=i===0;
+    const name=isToday?'Today':days[d.getDay()];
+    const icon=wmoIcon(daily.weather_code[i]);
+    const hi=Math.round(daily.temperature_2m_max[i]);
+    const rain=daily.precipitation_probability_max[i];
+    const rainClass=rain>=60?'wd-rain high':'wd-rain';
+    return `<div class="w-day${isToday?' today':''}">
+      <div class="wd-name">${name}</div>
+      <div class="wd-icon">${icon}</div>
+      <div class="wd-hi">${hi}°</div>
+      ${rain>10?`<div class="${rainClass}">${rain}%💧</div>`:''}
+    </div>`;
+  }).join('');
+  document.getElementById('weekForecast').innerHTML=html;
+}
+
+loadWeather();
 </script>
 </body>
 </html>
